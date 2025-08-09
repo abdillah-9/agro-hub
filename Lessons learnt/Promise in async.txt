@@ -1,0 +1,4 @@
+Promise is async object which has status and result of asynchronous operation/process/function.
+OR
+"A Promise is an object that holds the status and result of an asynchronous operation."
+

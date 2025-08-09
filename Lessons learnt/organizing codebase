@@ -1,0 +1,44 @@
+src/
+│
+├── main.jsx
+├── App.jsx
+├── Global.css
+│
+├── assets/               # images, logos, icons
+├── components/           # reusable UI components (e.g. Button, Card)
+├── features/             # actual features of your app
+│   ├── settings/
+│   └── users/
+│
+├── pages/                # top-level route pages
+│   ├── Home.jsx
+│   ├── About.jsx
+│   ├── SignIn.jsx
+│   └── SignUp.jsx
+│
+├── hooks/                # custom hooks like useAuth
+├── utils/                # helper functions
+├── services/             # API logic (e.g. authService.js, api.js)
+└── routes/               # Optional: central route config or ProtectedRoute.jsx
+
+
+src/
+├── hooks/
+│   ├── useAuth.js
+│   └── useDebounce.js
+│
+├── utils/
+│   ├── formatCurrency.js
+│   └── capitalize.js
+
+
+| Folder      | Purpose                                                             | Example Logic                        |
+| ----------- | ------------------------------------------------------------------- | ------------------------------------ |
+| `utils/`    | Generic **helper functions** — pure, stateless                      | formatDate, capitalize, debounce     |
+| `services/` | Logic that interacts with **external systems** (API, auth, storage) | loginUser, fetchProducts, uploadFile |
+
+| Syntax       | Type             | Can embed variables? | Example                |
+| ------------ | ---------------- | -------------------- | ---------------------- |
+| `'text'`     | String literal   | ❌ No                 | `'Hello, ' + name`     |
+| `"text"`     | String literal   | ❌ No                 | `"Age: " + age`        |
+| `` `text` `` | Template literal | ✅ Yes                | `` `Hello, ${name}` `` |

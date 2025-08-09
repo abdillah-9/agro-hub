@@ -1,0 +1,250 @@
+*{
+  box-sizing: border-box;
+  margin: 0px;
+  text-decoration: none;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+html, body{
+  overflow-x: hidden;
+}
+.flex-Row-Grow-Wrap-Gap-Space_Between{
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+.flex-Row-Grow-Wrap-Gap{
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  flex-grow: 1;
+}
+.flex-Row-Wrap-Gap{
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.flex-Row-Wrap{
+  display: flex;
+  flex-wrap: wrap;
+}
+.flex-Row-Grow-Wrap{
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+}
+.flex-Column-Grow-Gap{
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 20px;
+}
+.flex-Column{
+  display: flex;
+  flex-direction: column;
+}
+.centered{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.centeredV{
+  justify-content: center;
+}
+.centeredH{
+  align-items: center;
+}
+.spaceBetween{
+  justify-content: space-between;
+}
+.gap10px{
+  gap: 7px;
+}
+.inputContainer1{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 320px;
+  gap: 10px;
+}
+.inputContainer2{
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 320px;
+  gap: 10px; 
+}
+.input1{
+  display: flex;
+  flex-grow: 1;
+  max-width: 300px;
+  border-radius: 5px;
+  border: 0px solid rgba(0,0,0,0);
+  padding: 12px 10px;
+}
+.submit1{
+  justify-content: center;
+  cursor: pointer;
+}
+.link{
+  cursor: pointer;
+}
+.specLink{
+  display: flex;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgb(226, 225, 225);
+  width: fit-content;
+  cursor: pointer;
+}
+.p25px{
+  padding: 25px;
+}
+.p10px{
+  padding: 10px;
+}
+.p5_15px{
+  padding: 5px 15px;
+}
+.pV10px{
+  padding: 10px 0px;
+}
+.h1{
+  /* font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  /* font-family:'Courier New', Courier, monospace; */
+  font-size: 42px;
+  font-weight: 700;
+}
+.h2{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 35px;
+  font-weight: 700;
+}
+.h3{
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 22px;
+  font-weight: 600;  
+}
+.h4{
+  font-size: 17px;
+  font-weight: 600;
+}
+.p1{
+  font-size: 14px;
+  font-weight: 500;
+}
+.p2{
+  font-size: 14px;
+}
+.p3{
+  font-size: 12px;
+}
+.p4{
+  font-size: 10px;
+  font-weight: 100;
+}
+.darkGreenText{
+  color: rgb(1, 46, 1);
+}
+.midGreenText{
+  color: rgba(3, 94, 3, 0.822);
+}
+.paleGreenText{
+  color: rgba(6, 116, 6, 0.521);
+}
+.pureWhiteText{
+  color: rgb(255, 252, 252);
+}
+.midWhiteText{
+  color: rgb(226, 225, 225);
+}
+.paleWhiteText{
+  color: rgb(182, 181, 181);
+}
+.pureBlackText{
+ color: rgb(29, 29, 29);
+}
+.midBlackText{
+   color: rgba(29, 29, 29, 0.747);
+}
+.paleBlackText{
+  color: rgb(44, 43, 43);
+}
+.darkGreenBody{
+  background-color: rgb(1, 46, 1);
+}
+.pureGreenBody{
+  background-color: rgb(1, 122, 1);
+}
+.midGreenBody{
+  background-color: rgb(1, 196, 89);
+}
+.paleGreenBody{
+  background-color: rgba(6, 116, 6, 0.521);
+}
+.pureWhiteBody{
+  background-color: rgb(255, 255, 255);
+}
+.paleWhiteBody{
+  background-color: rgba(214, 214, 214, 0.274);
+}
+.midWhiteBody{
+  background-color: rgb(223, 222, 222);
+}
+.greenYellowBody{
+  background: linear-gradient(135deg, rgb(1, 196, 115), rgba(105, 196, 1, 0.829));
+}
+.whiteSmokeBody{
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.596) , rgba(249, 250, 249, 0.137));
+}
+.blur{
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+.w100vw{
+  width: 100vw;
+}
+.w45vw{
+  width: 45vw;
+}
+.maxW700{
+  max-width: 700px;
+}
+.maxW500{
+  max-width:500px;
+}
+.maxW300{
+  max-width: 300px;
+}
+.maxW200{
+  max-width: 200px;
+}
+.maxW100{
+  max-width: 120px;
+}
+.minW200{
+  min-width: 200px;
+}
+.h80vh{
+  height: 90vh;
+}
+.h20vh{
+  height: 10vh;
+}
+.hFit{
+  height: fit-content;
+}
+.bRad20{
+  border-radius: 20px;
+}
+.bRad50_parcent{
+  border-radius: 50%;
+}
+.borderB{
+  border-bottom: 1px solid;
+}
+.paleWhiteBorder{
+  border-color: rgb(182, 181, 181);
+}
+
