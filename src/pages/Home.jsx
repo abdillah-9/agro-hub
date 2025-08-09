@@ -7,7 +7,7 @@ import { FaFacebook, FaLinkedin} from 'react-icons/fa';
 import { TbBrandWhatsappFilled } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 import About from './About';
-import SignIn from './SignIN';
+import SignIn from './SignIn';
 import SignUp from './SignUp';
 
 //create MiniHome

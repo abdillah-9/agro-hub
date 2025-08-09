@@ -3,7 +3,7 @@ import "./Global.css"
 import {useAuth} from './services/useAuth'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home';
-import SignIn from './pages/SignIN';
+import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import MainApp from './pages/MainApp';
 
