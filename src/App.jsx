@@ -15,7 +15,7 @@ function About(){
 
 export default function App() {
   const {auths} = useAuth();
-  const juma = "juma";
+  const juma = "jumaa";
 
   return (
     <BrowserRouter>
