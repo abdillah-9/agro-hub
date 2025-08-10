@@ -28,6 +28,7 @@ function MiniHome(){
         style={{padding:"15px 70px", borderRadius:"25px"}}>LEARN MORE</Link>
       </div>
     </section>
+    
   )
 } 
 
@@ -78,6 +79,7 @@ export default function Home() {
             </span>
           </div>
         </nav>
+        
         {
           activeLink == "MiniHome" ? <MiniHome/> : 
           activeLink == "About" ? <About/> : 
@@ -85,6 +87,7 @@ export default function Home() {
         }
       </div>
     </div>
+    
   )
 }
 
