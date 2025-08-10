@@ -247,4 +247,7 @@ html, body{
 .paleWhiteBorder{
   border-color: rgb(182, 181, 181);
 }
-
+.hello{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+}

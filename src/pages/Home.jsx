@@ -27,6 +27,40 @@ function MiniHome(){
         <Link to='/about' className='midGreenText pureWhiteBody p1'
         style={{padding:"15px 70px", borderRadius:"25px"}}>LEARN MORE</Link>
       </div>
+       {/*  */}
+       <div style={{display:"flex",gap:"20px", flexWrap:"wrap",justifyContent:"center",marginTop:"40px",}}>
+        {/* customer card */}
+        <div style={cardStyle}>
+          <h3>Customer</h3>
+          <p>Are you willing to purcahse product from Farmer's 
+            <br />
+            <strong>Login/ Register a customer</strong>
+            <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
+          </p>
+
+        </div>
+        {/* customer card */}
+        <div style={cardStyle}>
+          <h3>Farmer</h3>
+          <p>Online Market where you can Sell fruits & vegetables, agri produce, etc...
+            <br />
+            <strong>Login/ Register as Farmer</strong>
+            <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
+          </p>
+
+        </div>
+        {/* customer card */}
+        <div style={cardStyle}>
+          <h3>Worker</h3>
+          <p>Find Agriculture Jobs and opportunities.. Farm Worker jobs available here... 
+            <br />
+            <strong>Login/ Register as Worker</strong>
+            <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
+          </p>
+
+        </div>
+
+       </div>
     </section>
     
   )
@@ -146,3 +180,24 @@ const contentDesc={
   textAlign:"center", 
   padding:"10px 25px",
 }
+const cardStyle = {
+  backgroundColor: "white",
+  textAlign: "center",
+  padding: "20px",
+  borderRadius: "0.5rem",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+  width: "300px",
+  minHeight: "200px",
+  flexShrink: 0
+};
+
+const buttonStyle = {
+  backgroundColor: "#17a2b8",
+  color: "white",
+  padding: "10px 20px",
+  borderRadius: "5px",
+  textDecoration: "none",
+  display: "inline-block",
+  marginTop: "10px"
+};
+
