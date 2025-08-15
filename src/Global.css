@@ -247,7 +247,30 @@ html, body{
 .paleWhiteBorder{
   border-color: rgb(182, 181, 181);
 }
-.hello{
+/* icon style */
+.user-icon{
+  font-size: 32px;
+  padding: 1.2rem;
+  color: #009970;
+}
+.footer{
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(4,1fr);
+  background: #f1f0f2;
+  padding: 2rem;
+  font-size: 14px;
+  color: #444444;
+}
+.footer ul{
+  list-style: none;
+  padding: 1rem;
+  text-align: center;
+  margin: 0;
+  line-height: 1.5rem;
+}
+.icon{
+  padding-right: 2px;
+    color: #00c28e;
+    font-size: 18px;
+    line-height: 1;
 }

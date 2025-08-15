@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import background from '../assets/african-man-harvesting-vegetables.jpg';
-import logo from '../assets/logo.jpg';
+import logo from '../assets/logo.jpg'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faPersonRunning } from '@fortawesome/free-solid-svg-icons';
+import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight} from '@fortawesome/free-solid-svg-icons';
 import { RiMailCheckFill } from 'react-icons/ri';
 import { MdPhoneInTalk } from 'react-icons/md';
 import { FaFacebook, FaLinkedin} from 'react-icons/fa';
@@ -9,6 +14,8 @@ import { Link } from 'react-router-dom';
 import About from './About';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
+import customer from '../pages/customer';
+
 
 //create MiniHome
 function MiniHome(){
@@ -31,17 +38,19 @@ function MiniHome(){
        <div style={{display:"flex",gap:"20px", flexWrap:"wrap",justifyContent:"center",marginTop:"40px",}}>
         {/* customer card */}
         <div style={cardStyle}>
-          <h3>Customer</h3>
+          <h3 style={{marginBottom:"1rem"}}>Customer</h3>
+          <FontAwesomeIcon icon={faUsers}  className='user-icon'/>
           <p>Are you willing to purcahse product from Farmer's 
             <br />
             <strong>Login/ Register a customer</strong>
-            <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
+            <Link to="/Customer" style={buttonStyle}>Click Here</Link>
           </p>
 
         </div>
-        {/* customer card */}
+        {/* Farmer card */}
         <div style={cardStyle}>
           <h3>Farmer</h3>
+          <FontAwesomeIcon icon={faHandHoldingHeart} className='user-icon'/>
           <p>Online Market where you can Sell fruits & vegetables, agri produce, etc...
             <br />
             <strong>Login/ Register as Farmer</strong>
@@ -49,22 +58,81 @@ function MiniHome(){
           </p>
 
         </div>
-        {/* customer card */}
+        {/* worker card */}
         <div style={cardStyle}>
           <h3>Worker</h3>
+          <FontAwesomeIcon icon={faPersonRunning}  className='user-icon'/>
           <p>Find Agriculture Jobs and opportunities.. Farm Worker jobs available here... 
             <br />
             <strong>Login/ Register as Worker</strong>
             <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
           </p>
-
+           
         </div>
-
+        {/* nested function */} 
+        {/* and props. */}
+        {/*  
+        <Kasike
+        photoName="../src/assets/logo.jpg"
+        name="Lorem, ipsum."
+        ingradients="hello there am developer"/> 
+        <Kasike
+        photoName="../src/assets/logo.jpg"
+        name="Lorem, ipsum."
+        ingradients="hello there am developer"/> 
+        
+*/}
+<section>
+  <footer>
+  <div className="footer">
+    <article>
+      <h2>Agro-hub</h2>
+      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Non doloribus quisquam eius?</p>
+    </article>
+    <article>
+      <h2>Useful Links</h2>
+      <ul>
+        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>Blog</a></li>
+        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>News</a></li>
+        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>Farmer's Kit</a></li>
+        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>Our Team</a></li>
+      </ul>
+    </article>
+    <article>
+      <h2>Our Services</h2>
+      <ul>
+        <li><a href="">Home</a></li>
+        <li><a href="">About</a></li>
+        <li><a href="">Hire</a></li>
+        <li><a href="">Contact Us</a></li>
+      </ul>
+    </article>
+    <article>
+      <h2>Staff Login</h2>
+      <p>This feature is Available only for Staff or Administrator</p>
+      <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
+    </article>
+  </div>
+  </footer>
+</section>
+  
+  
        </div>
     </section>
     
   )
-} 
+ } 
+ {/*
+function Kasike(props){
+  return(
+    <div >
+      <img src={props.photoName} alt={props.name} />
+      <h3>{props.name}</h3>
+      <p>{props.ingradients}</p>
+    </div>
+  )
+}
+  */}
 
 export default function Home() {
 
