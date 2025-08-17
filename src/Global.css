@@ -274,3 +274,14 @@ html, body{
     font-size: 18px;
     line-height: 1;
 }
+/* responsive design */
+@media screen and (max-width:768px){
+  .footer{
+    grid-template-columns: 1fr;
+  }
+  article{
+    display: block;
+    justify-content: flex-start;
+  }
+  
+}

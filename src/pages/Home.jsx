@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import About from './About';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
-import customer from '../pages/customer';
+import Customer from './Customer';
 
 
 //create MiniHome
@@ -69,71 +69,12 @@ function MiniHome(){
           </p>
            
         </div>
-        {/* nested function */} 
-        {/* and props. */}
-        {/*  
-        <Kasike
-        photoName="../src/assets/logo.jpg"
-        name="Lorem, ipsum."
-        ingradients="hello there am developer"/> 
-        <Kasike
-        photoName="../src/assets/logo.jpg"
-        name="Lorem, ipsum."
-        ingradients="hello there am developer"/> 
-        
-*/}
-<section>
-  <footer>
-  <div className="footer">
-    <article>
-      <h2>Agro-hub</h2>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Non doloribus quisquam eius?</p>
-    </article>
-    <article>
-      <h2>Useful Links</h2>
-      <ul>
-        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>Blog</a></li>
-        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>News</a></li>
-        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>Farmer's Kit</a></li>
-        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>Our Team</a></li>
-      </ul>
-    </article>
-    <article>
-      <h2>Our Services</h2>
-      <ul>
-        <li><a href="">Home</a></li>
-        <li><a href="">About</a></li>
-        <li><a href="">Hire</a></li>
-        <li><a href="">Contact Us</a></li>
-      </ul>
-    </article>
-    <article>
-      <h2>Staff Login</h2>
-      <p>This feature is Available only for Staff or Administrator</p>
-      <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
-    </article>
-  </div>
-  </footer>
-</section>
-  
-  
+    <Footer/>
        </div>
     </section>
     
   )
  } 
- {/*
-function Kasike(props){
-  return(
-    <div >
-      <img src={props.photoName} alt={props.name} />
-      <h3>{props.name}</h3>
-      <p>{props.ingradients}</p>
-    </div>
-  )
-}
-  */}
-
 export default function Home() {
 
   const [activeLink, setActiveLInk] = useState("MiniHome");
@@ -190,6 +131,44 @@ export default function Home() {
       </div>
     </div>
     
+  )
+}
+
+function Footer(){
+  return(
+    <section>
+  <footer>
+  <div className="footer">
+    <article>
+      <h2>Agro-hub</h2>
+      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Non doloribus quisquam eius?</p>
+    </article>
+    <article>
+      <h2>Useful Links</h2>
+      <ul>
+        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>Blog</a></li>
+        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>News</a></li>
+        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>Farmer's Kit</a></li>
+        <li><a href=""><FontAwesomeIcon icon={faArrowRight} className='icon'/>Our Team</a></li>
+      </ul>
+    </article>
+    <article>
+      <h2>Our Services</h2>
+      <ul>
+        <li><a href="">Home</a></li>
+        <li><a href="">About</a></li>
+        <li><a href="">Hire</a></li>
+        <li><a href="">Contact Us</a></li>
+      </ul>
+    </article>
+    <article>
+      <h2>Staff Login</h2>
+      <p>This feature is Available only for Staff or Administrator</p>
+      <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
+    </article>
+  </div>
+  </footer>
+</section>
   )
 }
 
