@@ -253,35 +253,9 @@ html, body{
   padding: 1.2rem;
   color: #009970;
 }
-.footer{
-  display: grid;
-  grid-template-columns: repeat(4,1fr);
-  background: #f1f0f2;
-  padding: 2rem;
-  font-size: 14px;
-  color: #444444;
-}
-.footer ul{
-  list-style: none;
-  padding: 1rem;
-  text-align: center;
-  margin: 0;
-  line-height: 1.5rem;
-}
-.icon{
-  padding-right: 2px;
-    color: #00c28e;
-    font-size: 18px;
-    line-height: 1;
-}
-/* responsive design */
-@media screen and (max-width:768px){
-  .footer{
-    grid-template-columns: 1fr;
-  }
-  article{
-    display: block;
-    justify-content: flex-start;
-  }
-  
+.bottom-footer{
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  padding: 4rem;
 }
