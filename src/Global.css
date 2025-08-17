@@ -253,9 +253,3 @@ html, body{
   padding: 1.2rem;
   color: #009970;
 }
-.bottom-footer{
-  background-color: black;
-  display: flex;
-  justify-content: space-between;
-  padding: 4rem;
-}
