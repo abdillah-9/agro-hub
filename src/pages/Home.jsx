@@ -8,7 +8,7 @@ import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight} from '@fortawesome/free-solid-svg-icons';
 import { RiMailCheckFill } from 'react-icons/ri';
 import { MdPhoneInTalk } from 'react-icons/md';
-import { FaFacebook, FaLinkedin} from 'react-icons/fa';
+import { FaFacebook, FaLinkedin,FaGreaterThan} from 'react-icons/fa';
 import { TbBrandWhatsappFilled } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 import About from './About';
@@ -147,19 +147,19 @@ function Footer() {
           <article className="footer-article">
             <h2>Useful Links</h2>
             <ul>
-              <li><a href="#">Blog</a></li>
-              <li><a href="#">News</a></li>
-              <li><a href="#">Farmer's Kit</a></li>
-              <li><a href="#">Our Team</a></li>
+              <li><a href="#"><FaGreaterThan/>Blog</a></li>
+              <li><a href="#"><FaGreaterThan/>News</a></li>
+              <li><a href="#"><FaGreaterThan/>Farmer's Kit</a></li>
+              <li><a href="#"><FaGreaterThan/>Our Team</a></li>
             </ul>
           </article>
           <article className="footer-article">
             <h2>Our Services</h2>
             <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Hire</a></li>
-              <li><a href="#">Contact</a></li>
+              <li><a href="#"><FaGreaterThan/>Home</a></li>
+              <li><a href="/About"><FaGreaterThan/>About</a></li>
+              <li><a href="#"><FaGreaterThan/>Hire</a></li>
+              <li><a href="#"><FaGreaterThan/>Contact</a></li>
             </ul>
           </article>
           <article className="footer-article">
@@ -300,6 +300,7 @@ const footerStyles = `
 
   .footer-article ul li {
     margin-bottom: 0.5rem;
+    
   }
 
   .footer-article ul li a {
