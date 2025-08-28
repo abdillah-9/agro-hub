@@ -1,14 +1,20 @@
 import React, { useState } from 'react'
 import background from '../assets/african-man-harvesting-vegetables.jpg';
-import logo from '../assets/logo.jpg';
+import logo from '../assets/logo.jpg'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faPersonRunning } from '@fortawesome/free-solid-svg-icons';
+import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight} from '@fortawesome/free-solid-svg-icons';
 import { RiMailCheckFill } from 'react-icons/ri';
 import { MdPhoneInTalk } from 'react-icons/md';
-import { FaFacebook, FaLinkedin} from 'react-icons/fa';
+import { FaFacebook, FaLinkedin,FaGreaterThan} from 'react-icons/fa';
 import { TbBrandWhatsappFilled } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 import About from './About';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
+
 
 //create MiniHome
 function MiniHome(){
@@ -27,10 +33,47 @@ function MiniHome(){
         <Link to='/about' className='midGreenText pureWhiteBody p1'
         style={{padding:"15px 70px", borderRadius:"25px"}}>LEARN MORE</Link>
       </div>
-    </section>
-  )
-} 
+       {/*  */}
+       <div style={{display:"flex",gap:"20px", flexWrap:"wrap",justifyContent:"center",marginTop:"40px",}}>
+        {/* customer card */}
+        <div style={cardStyle}>
+          <h3 style={{marginBottom:"1rem"}}>Customer</h3>
+          <FontAwesomeIcon icon={faUsers}  className='user-icon'/>
+          <p>Are you willing to purcahse product from Farmer's 
+            <br />
+            <strong>Login/ Register a customer</strong>
+            <Link to="/Customer" style={buttonStyle}>Click Here</Link>
+          </p>
 
+        </div>
+        {/* Farmer card */}
+        <div style={cardStyle}>
+          <h3>Farmer</h3>
+          <FontAwesomeIcon icon={faHandHoldingHeart} className='user-icon'/>
+          <p>Online Market where you can Sell fruits & vegetables, agri produce, etc...
+            <br />
+            <strong>Login/ Register as Farmer</strong>
+            <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
+          </p>
+
+        </div>
+        {/* worker card */}
+        <div style={cardStyle}>
+          <h3>Worker</h3>
+          <FontAwesomeIcon icon={faPersonRunning}  className='user-icon'/>
+          <p>Find Agriculture Jobs and opportunities.. Farm Worker jobs available here... 
+            <br />
+            <strong>Login/ Register as Worker</strong>
+            <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
+          </p>
+           
+        </div>
+    <Footer/>
+       </div>
+    </section>
+    
+  )
+ } 
 export default function Home() {
 
   const [activeLink, setActiveLInk] = useState("MiniHome");
@@ -78,6 +121,7 @@ export default function Home() {
             </span>
           </div>
         </nav>
+        
         {
           activeLink == "MiniHome" ? <MiniHome/> : 
           activeLink == "About" ? <About/> : 
@@ -85,7 +129,58 @@ export default function Home() {
         }
       </div>
     </div>
+    
   )
+}
+
+function Footer() {
+  return (
+    <>
+      <style>{footerStyles}</style>
+      <section className="footer-section">
+        <footer className="footer-container">
+          <article className="footer-article">
+            <h2>Agro-hub</h2>
+            <RiMailCheckFill />
+            <span className='p3'>sabdillah855@gmail.com</span>
+          </article>
+          <article className="footer-article">
+            <h2>Useful Links</h2>
+            <ul>
+              <li><a href="#"><FaGreaterThan/>Blog</a></li>
+              <li><a href="#"><FaGreaterThan/>News</a></li>
+              <li><a href="#"><FaGreaterThan/>Farmer's Kit</a></li>
+              <li><a href="#"><FaGreaterThan/>Our Team</a></li>
+            </ul>
+          </article>
+          <article className="footer-article">
+            <h2>Our Services</h2>
+            <ul>
+              <li><a href="#"><FaGreaterThan/>Home</a></li>
+              <li><a href="/About"><FaGreaterThan/>About</a></li>
+              <li><a href="#"><FaGreaterThan/>Hire</a></li>
+              <li><a href="#"><FaGreaterThan/>Contact</a></li>
+            </ul>
+          </article>
+          <article className="footer-article">
+            <h2>Staff Login</h2>
+            <p>This feature is Available only for Staff or Administrator</p>
+            <Link to="/SignIn" className="staff-login-link">
+              Click here to Login
+            </Link>
+          </article>
+        </footer>
+        <div className="bottom-footer">
+          <p>&copy; Copyright 2025 <strong>AGRO-HUB</strong>. All Rights Reserved. <br></br> Designed by Agro-hub</p>
+          <div className="social-icons">
+            <a href="#"><FaFacebook /></a>
+            <a href="#"><TbBrandWhatsappFilled /></a>
+            <a href="#"><FaLinkedin /></a>
+          </div>
+        </div>
+      </section>
+    </>
+  );
 }
 
 const main={
@@ -143,3 +238,143 @@ const contentDesc={
   textAlign:"center", 
   padding:"10px 25px",
 }
+const cardStyle = {
+  backgroundColor: "white",
+  textAlign: "center",
+  padding: "20px",
+  borderRadius: "0.5rem",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+  width: "300px",
+  minHeight: "200px",
+  flexShrink: 0
+};
+
+const buttonStyle = {
+  backgroundColor: "#17a2b8",
+  color: "white",
+  padding: "10px 20px",
+  borderRadius: "5px",
+  textDecoration: "none",
+  display: "inline-block",
+  marginTop: "10px"
+};
+
+
+// footer style
+const footerStyles = `
+  .footer-section {
+    background-color: #f8f9fa;
+    color: #444444;
+    padding: 2rem 1rem;
+    font-size: 16px;
+    width:100vw;
+  }
+
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    text-align: left;
+  }
+
+  .footer-article h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .footer-article p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0.5rem 0;
+  }
+
+  .footer-article ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .footer-article ul li {
+    margin-bottom: 0.5rem;
+    
+  }
+
+  .footer-article ul li a {
+    color: #009970;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+  }
+
+  .footer-article ul li a:hover {
+    color: #007a5e;
+  }
+
+  .staff-login-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 1rem;
+    transition: background-color 0.3s;
+    width: 100%;
+    text-align: center;
+  }
+
+  .staff-login-link:hover {
+    background-color: #45a049;
+  }
+
+  .bottom-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 2px solid #ddd;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .social-icons a {
+    color: #444;
+    font-size: 1.2rem;
+    margin-left: 1rem;
+    transition: color 0.3s;
+  }
+
+  .social-icons a:hover {
+    color: #009970;
+  }
+
+  @media (max-width: 1023px) {
+    .footer-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .bottom-footer {
+      flex-direction: column;
+      text-align: center;
+    }
+    .social-icons {
+      margin-top: 1rem;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .footer-container {
+      grid-template-columns: 1fr;
+    }
+    .footer-article {
+      text-align: center;
+    }
+    .staff-login-link {
+      width: auto;
+    }
+  }
+`;

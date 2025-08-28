@@ -169,7 +169,7 @@ html, body{
   font-size: 14px;
 }
 .p3{
-  font-size: 12px;
+  font-size: 16px;
 }
 .p4{
   font-size: 10px;
@@ -342,3 +342,9 @@ html, body{
 }
 }
 
+/* icon style */
+.user-icon{
+  font-size: 32px;
+  padding: 1.2rem;
+  color: #009970;
+}
