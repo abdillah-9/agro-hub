@@ -1,28 +1,31 @@
-import React from 'react'
-import { BiFilterAlt, BiSearchAlt } from 'react-icons/bi'
-import Table from './Table'
+import { useContext, useState } from 'react'
+import DashboardPage from '../features/Dashboards/DashboardPage'
+import BuyResourcesPage from '../features/buy_resources/BuyResourcesPage'
+import SellResourcesPage from '../features/sell_resources/SellResourcesPage'
+import BuyCropsPage from '../features/buy_crops/BuyCropsPage'
+import SellCropsPage from '../features/sell_crops/SellCropsPage'
+import UserPage from '../features/Users/UserPage'
+import SettingsPage from '../features/Settings/SettingsPage'
+import { AppContext } from '../pages/MainApp'
 
 export default function MiniMainApp() {
+  const {showSideBar,activeMenu} = useContext(AppContext);
+  
+  let calcWidth ="";
+  showSideBar? calcWidth = "calc(100vw - 120px)" : calcWidth = "100vw";
+  console.log("active menu inside minimainapp is "+activeMenu)
+
   return (
-    <div className='midWhiteBody flex-Column-Grow-Gap h80vh'>
-      <div className='flex-Row-Wrap midWhiteBody borderB paleWhiteBorder pV10px'>
-        <div className='p10px'>View All <span className='midGreenBody pureWhiteText p5_15px bRad20'>20</span></div>
-        <div className='p10px'>Pending <span className='midGreenBody pureWhiteText p5_15px bRad20'>6</span></div>
-        <div className='p10px'>Sold <span className='midGreenBody pureWhiteText p5_15px bRad20'>9</span></div>
-        <div className='p10px'>Not paid <span className='midGreenBody pureWhiteText p5_15px bRad20'>500</span></div>
-      </div>
-      <div className='flex-Row-Wrap-Gap spaceBetween midWhiteBody p10px'>
-        <span>Insert new</span>
-        <select>
-          <option><BiFilterAlt/> Filter</option>
-          <option value={"name"}>By name</option>
-          <option value={"date"}>By date</option>
-          <option value={"status"}>By status</option>
-        </select>
-      </div>
-      <div className='flex-Row-Grow-Wrap-Gap pureWhiteBody'>
-        <Table/>
-      </div>
+    <div className='midWhiteBody flex-Column-Grow h80vh'>
+      {
+        activeMenu == "dashboard" ? <DashboardPage calcWidth={calcWidth}/> :
+        activeMenu == "buy resources" ? <BuyResourcesPage calcWidth={calcWidth}/> :
+        activeMenu == "sell resources" ? <SellResourcesPage calcWidth={calcWidth}/> :
+        activeMenu == "buy crops" ? <BuyCropsPage calcWidth={calcWidth}/> :
+        activeMenu == "sell crops" ? <SellCropsPage calcWidth={calcWidth}/> :
+        activeMenu == "user" ? <UserPage calcWidth={calcWidth}/> :
+        activeMenu == "settings" && <SettingsPage calcWidth={calcWidth}/>
+      }
     </div>
   )
 }

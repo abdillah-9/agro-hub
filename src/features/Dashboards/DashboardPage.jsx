@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function Table() {
+export default function DashboardPage() {
   return (
     <div>
-      My table
+      Dashboard
     </div>
   )
 }
