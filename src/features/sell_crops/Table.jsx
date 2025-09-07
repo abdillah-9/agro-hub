@@ -4,7 +4,7 @@ import { AppContext } from '../../pages/MainApp';
 import demoPhoto from "../../assets/g2i needs.png"
 
 export default function Table({shownData}) {
-    const { setShowOverlay,setBuyResourceForm,setResourceMoreDetails, } = useContext(AppContext);
+    const { sellCropsForm, setSellCropsForm, setShowOverlay, setDeleteCard, deleteCard } = useContext(AppContext);
     const [viewPhoto, setViewPhoto] = useState(false);
 
     const demoData = [
@@ -34,7 +34,7 @@ export default function Table({shownData}) {
             "seller":"Jumbo Mwalutenge",
             "location":"Singida",
             "receipt":"",
-            "status":"onsale",
+            "status":"dumped",
         },
         {
             "id":3,
@@ -74,8 +74,8 @@ return (
            <tbody>
             {
                 demoData ? demoData.map((entry, index)=>
-                <tr key={index}>
-                    <td style={tCell}>{index++}</td>
+                <tr key={index} style={shownData == "all" || shownData == entry.status ? {} : {display:"none"}}>
+                    <td style={tCell}>{++index}</td>
                     <td style={tCell}>
                         <div style={viewPhoto ? showPicSpace : {width:"100%",height:"100%"}} className='blur link'
                         onClick={()=>setViewPhoto(!viewPhoto)}>
@@ -91,15 +91,20 @@ return (
                     <td style={tCell}>{entry.price}</td>
                     <td style={tCell}>{entry.seller}</td>
                     <td style={tCell}>{entry.location}</td>
-                    <td style={tCell}>{}aaa</td>
+                    <td style={tCell}>{entry.receipt || "N/A"}</td>
                     <td style={tCell}>
-                        <span style={{...actionButton}}>Purchased</span>
+                        <span style={entry.status == "onsale" ? 
+                            {...sellStatus, backgroundColor:"rgba(1, 196, 196, 0.45)"} :
+                            entry.status == "dumped" ? 
+                            {...sellStatus, backgroundColor:"rgba(196, 1, 99, 0.38)"} : {...sellStatus}}>
+                            {entry.status}
+                        </span>
                     </td>
                     <td style={tCellActions}>
-                        <i onClick={()=>editAction(ovulationRow)} className='link'>
+                        <i onClick={()=>{setSellCropsForm(true); setShowOverlay(true)}} className='link'>
                             <TfiPencilAlt/>
                         </i>
-                        <i onClick={()=>deleteAction(ovulationRow.id)} className='link'>
+                        <i onClick={()=>{setDeleteCard(true); setShowOverlay(true)}} className='link'>
                             <TfiTrash/>
                         </i>
                     </td>
@@ -134,11 +139,28 @@ const tCellActions={
   minWidth:"100px",
   fontSize:"15px",
 }
-const actionButton={
+const sellStatus={
   backgroundColor:"rgba(79, 196, 1, 0.45)",
   padding:"5px 10px",
   borderRadius:"20px",
   fontWeight:500,
   fontSize:"12px",
   width:"fit-content"
+}
+const showPicSpace={
+  position:"fixed",
+  top:0,left:0,
+  display:"flex",
+  justifyContent:"center",
+  alignItems:"center",
+  width:"100vw",
+  height:"100vh",
+  zIndex:3,
+}
+const showPic={
+    width:"80%",
+    maxWidth:"600px",
+    height:"60%",
+    maxHeight:"500px",
+    boxShadow:"12px 12px 20px rgb(15, 14, 3)",
 }

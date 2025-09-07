@@ -1,0 +1,4 @@
+git add .
+git commit -m "your message"
+git pull --rebase origin main  # This is the command you forgot
+git push origin main

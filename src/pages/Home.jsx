@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import background from '../assets/african-man-harvesting-vegetables.jpg';
 import logo from '../assets/logo.jpg'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
-import { faPersonRunning } from '@fortawesome/free-solid-svg-icons';
-import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons';
-import { faArrowRight} from '@fortawesome/free-solid-svg-icons';
+import { FaUsers } from 'react-icons/fa6';
+import { FaPersonRunning } from 'react-icons/fa6';
+import { FaHandHoldingHeart } from 'react-icons/fa6';
+import { FaArrowRight } from 'react-icons/fa6';
 import { RiMailCheckFill } from 'react-icons/ri';
 import { MdPhoneInTalk } from 'react-icons/md';
 import { FaFacebook, FaLinkedin,FaGreaterThan} from 'react-icons/fa';
@@ -33,8 +32,43 @@ function MiniHome(){
         <Link to='/about' className='midGreenText pureWhiteBody p1'
         style={{padding:"15px 70px", borderRadius:"25px"}}>LEARN MORE</Link>
       </div>
-      <Footer/>
-       
+       {/*  */}
+       <div style={{display:"flex",gap:"20px", flexWrap:"wrap",justifyContent:"center",marginTop:"40px",}}>
+        {/* customer card */}
+        <div style={cardStyle}>
+          <h3 style={{marginBottom:"1rem"}}>Customer</h3>
+          <FontAwesomeIcon icon={faUsers}  className='user-icon'/>
+          <p>Are you willing to purcahse product from Farmer's 
+            <br />
+            <strong>Login/ Register a customer</strong>
+            <Link to="/Customer" style={buttonStyle}>Click Here</Link>
+          </p>
+
+        </div>
+        {/* Farmer card */}
+        <div style={cardStyle}>
+          <h3>Farmer</h3>
+          <FontAwesomeIcon icon={faHandHoldingHeart} className='user-icon'/>
+          <p>Online Market where you can Sell fruits & vegetables, agri produce, etc...
+            <br />
+            <strong>Login/ Register as Farmer</strong>
+            <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
+          </p>
+
+        </div>
+        {/* worker card */}
+        <div style={cardStyle}>
+          <h3>Worker</h3>
+          <FontAwesomeIcon icon={faPersonRunning}  className='user-icon'/>
+          <p>Find Agriculture Jobs and opportunities.. Farm Worker jobs available here... 
+            <br />
+            <strong>Login/ Register as Worker</strong>
+            <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
+          </p>
+           
+        </div>
+    <Footer/>
+       </div>
     </section>
     
   )

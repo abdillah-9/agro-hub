@@ -21,6 +21,9 @@ export default function MainApp() {
   const [sellCropsForm, setSellCropsForm] = useState(false);
   const [searchItem, setSearchItem] = useState(false); 
   const [sortItem, setSortItem] = useState(false);
+  const [deleteCard,setDeleteCard] = useState(false);
+  const [editProfile, setEditProfile] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState(false);
 
   useEffect(()=>{
     if(window.innerWidth > 720){
@@ -41,6 +44,9 @@ export default function MainApp() {
         resourceMoreDetails, setResourceMoreDetails,
         searchItem, setSearchItem,
         sortItem, setSortItem,
+        deleteCard, setDeleteCard,
+        profilePhoto, setProfilePhoto,
+        editProfile, setEditProfile,
       }
       }>
       <div className='flex-Row-Grow-Wrap'>
