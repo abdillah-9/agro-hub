@@ -1,80 +1,40 @@
 import React, { useState } from 'react'
 import background from '../assets/african-man-harvesting-vegetables.jpg';
 import logo from '../assets/logo.jpg'
-import { FaUsers } from 'react-icons/fa6';
-import { FaPersonRunning } from 'react-icons/fa6';
-import { FaHandHoldingHeart } from 'react-icons/fa6';
-import { FaArrowRight } from 'react-icons/fa6';
 import { RiMailCheckFill } from 'react-icons/ri';
 import { MdPhoneInTalk } from 'react-icons/md';
-import { FaFacebook, FaLinkedin,FaGreaterThan} from 'react-icons/fa';
+import { FaFacebook, FaLinkedin} from 'react-icons/fa';
 import { TbBrandWhatsappFilled } from 'react-icons/tb';
-import { Link } from 'react-router-dom';
 import About from './About';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 
 
 //create MiniHome
-function MiniHome(){
+function MiniHome({setActiveLInk, activeLink}){
   return(
     <section style={contentDesc}>
       <div className='h1 pureWhiteText maxW500'>
         Agro-hub enhance agriculture power
       </div>
-      <div className='p2 maxW500 pureWhiteText'>
-        This is the system that helps easy distribution of resources to farmers, crops to buyers and 
-        AI insights for better farming
+      <div className='maxW500 midWhiteText' style={{fontSize:"23px", maxWidth:"700px"}}>
+        It's your home where you can trade
+        <strong className='darkGreenText'> farming resources, </strong> trade 
+        <strong className='darkGreenText'> crops, </strong>  
+        <strong className='darkGreenText'> connect with professional agricultural workers </strong>
+        and <strong className='darkGreenText'> explore employment opportunities in agriculture.</strong>
       </div>
       <div style={{...details, gap:"20px", flexWrap:"wrap", justifyContent:"center"}}>
-        <Link to='/signIn' className='pureWhiteText midGreenBody p1' 
-        style={{padding:"15px 70px", borderRadius:"25px"}}>GET STARTED</Link>
-        <Link to='/about' className='midGreenText pureWhiteBody p1'
-        style={{padding:"15px 70px", borderRadius:"25px"}}>LEARN MORE</Link>
+        <div className='pureWhiteText midGreenBody p1' onClick={()=>{setActiveLInk('signIn')}}
+        style={{padding:"15px 70px", borderRadius:"25px"}}>GET STARTED</div>
+        <div className='midGreenText pureWhiteBody p1' onClick={()=>{setActiveLInk('About')}}
+        style={{padding:"15px 70px", borderRadius:"25px"}}>LEARN MORE</div>
       </div>
-       {/*  */}
-       <div style={{display:"flex",gap:"20px", flexWrap:"wrap",justifyContent:"center",marginTop:"40px",}}>
-        {/* customer card */}
-        <div style={cardStyle}>
-          <h3 style={{marginBottom:"1rem"}}>Customer</h3>
-          <FontAwesomeIcon icon={faUsers}  className='user-icon'/>
-          <p>Are you willing to purcahse product from Farmer's 
-            <br />
-            <strong>Login/ Register a customer</strong>
-            <Link to="/Customer" style={buttonStyle}>Click Here</Link>
-          </p>
-
-        </div>
-        {/* Farmer card */}
-        <div style={cardStyle}>
-          <h3>Farmer</h3>
-          <FontAwesomeIcon icon={faHandHoldingHeart} className='user-icon'/>
-          <p>Online Market where you can Sell fruits & vegetables, agri produce, etc...
-            <br />
-            <strong>Login/ Register as Farmer</strong>
-            <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
-          </p>
-
-        </div>
-        {/* worker card */}
-        <div style={cardStyle}>
-          <h3>Worker</h3>
-          <FontAwesomeIcon icon={faPersonRunning}  className='user-icon'/>
-          <p>Find Agriculture Jobs and opportunities.. Farm Worker jobs available here... 
-            <br />
-            <strong>Login/ Register as Worker</strong>
-            <Link to="/SignIn" style={buttonStyle}>Click Here</Link>
-          </p>
-           
-        </div>
-    <Footer/>
-       </div>
     </section>
     
   )
  } 
 export default function Home() {
-
   const [activeLink, setActiveLInk] = useState("MiniHome");
 
   return (
@@ -122,9 +82,10 @@ export default function Home() {
         </nav>
         
         {
-          activeLink == "MiniHome" ? <MiniHome/> : 
-          activeLink == "About" ? <About/> : 
-          activeLink == "SignIn" ? <SignIn/> : <SignUp/>
+          activeLink == "MiniHome" ? <MiniHome activeLink={activeLink} setActiveLInk={setActiveLInk}/> : 
+          activeLink == "About" ? <About activeLink={activeLink} setActiveLInk={setActiveLInk}/> : 
+          activeLink == "SignIn" ? <SignIn activeLink={activeLink} setActiveLInk={setActiveLInk}/> : 
+          <SignUp activeLink={activeLink} setActiveLInk={setActiveLInk}/>
         }
       </div>
     </div>
@@ -134,43 +95,7 @@ export default function Home() {
 
 function Footer() {
   return (
-    <>
-      <section className="footer-section">
-        <footer className="footer-container">
-          <article className="footer-article">
-            <h2>Agro-hub</h2>
-            <RiMailCheckFill />
-            <span className='p3'>sabdillah855@gmail.com</span>
-          </article>
-          <article className="footer-article">
-            <h2>Useful Links</h2>
-            <ul>
-              <li><a href="#"><FaGreaterThan className='icon'/>Blog</a></li>
-              <li><a href="#"><FaGreaterThan className='icon'/>News</a></li>
-              <li><a href="#"><FaGreaterThan className='icon'/>Farmer's Kit</a></li>
-              <li><a href="#"><FaGreaterThan className='icon'/>Our Team</a></li>
-            </ul>
-          </article>
-          <article className="footer-article">
-            <h2>Our Services</h2>
-            <ul>
-              <li><a href="#"><FaGreaterThan className='icon'/>Home</a></li>
-              <li><a href=""><FaGreaterThan className='icon'/>About</a></li>
-              <li><a href="#"><FaGreaterThan className='icon'/>Hire</a></li>
-              <li><a href="#"><FaGreaterThan className='icon'/>Contact</a></li>
-            </ul>
-          </article>
-        </footer>
-        <div className="bottom-footer">
-          <p>&copy; Copyright 2025 <strong>AGRO-HUB</strong>. All Rights Reserved. <br></br> Designed by Agro-hub</p>
-          <div className="social-icons">
-            <a href="#"><FaFacebook /></a>
-            <a href="#"><TbBrandWhatsappFilled /></a>
-            <a href="#"><FaLinkedin /></a>
-          </div>
-        </div>
-      </section>
-    </>
+    <></>
   );
 }
 
@@ -228,4 +153,10 @@ const contentDesc={
   gap:"20px", 
   textAlign:"center", 
   padding:"10px 25px",
+}
+const cardStyle={
+  
+}
+const buttonStyle={
+
 }

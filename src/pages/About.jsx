@@ -36,18 +36,43 @@ export default function About(){
           <div style={{padding:"20px", borderRadius:"50%"}} className='midGreenBody'>
             <FaPeopleGroup className='h1 pureWhiteText' />
           </div>
-          <div className='h3 midGreenText maxW200'>Meet pool of valuable customers</div>
+          <div className='h3 midGreenText maxW200'>Sell your crops to valuable customers</div>
           <div className='p1 midBlackText maxW200'>
             Farmers are can buy viable resources from trusted stores any moment with ease
           </div>
         </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:"10px",alignItems:"center",borderRadius:"10px",
+         width:"30%",boxShadow:"2px 2px 13px rgb(10,10,10)", padding:"20px",textAlign:"center", flexGrow:1}}
+         className='minW200 pureWhiteBody'>
+          <div style={{padding:"20px", borderRadius:"50%"}} className='midGreenBody'>
+            <FaPeopleGroup className='h1 pureWhiteText' />
+          </div>
+          <div className='h3 midGreenText maxW200'>Buy crops from trustworthy farmers</div>
+          <div className='p1 midBlackText maxW200'>
+            Farmers are can buy viable resources from trusted stores any moment with ease
+          </div>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:"10px",alignItems:"center",borderRadius:"10px",
+         width:"30%",boxShadow:"2px 2px 13px rgb(10,10,10)", padding:"20px",textAlign:"center", flexGrow:1}}
+         className='minW200 pureWhiteBody'>
+          <div style={{padding:"20px", borderRadius:"50%"}} className='midGreenBody'>
+            <FaPeopleGroup className='h1 pureWhiteText' />
+          </div>
+          <div className='h3 midGreenText maxW200'>Buy farming inputs/resources from best sellers</div>
+          <div className='p1 midBlackText maxW200'>
+            Farmers are can buy viable resources from trusted stores any moment with ease
+          </div>
+        </div>
+
         <div style={{display:"flex",flexDirection:"column",gap:"10px",alignItems:"center",borderRadius:"10px",
          width:"30%",boxShadow:"2px 2px 13px rgb(10,10,10)", padding:"20px",textAlign:"center", flexGrow:1}}
          className='minW200 pureWhiteBody'>
           <div style={{padding:"20px", borderRadius:"50%"}} className='midGreenBody'>
             <PiPlantFill className='h1 pureWhiteText' />
           </div>
-          <div className='h3 midGreenText maxW200'>Sell and Buy high quality crops without limit</div>
+          <div className='h3 midGreenText maxW200'>Sell agriculure resources/inputs to farmers</div>
           <div className='p1 midBlackText maxW200'>
             Farmers are can buy viable resources from trusted stores any moment with ease
           </div>
@@ -58,7 +83,7 @@ export default function About(){
           <div style={{padding:"20px", borderRadius:"50%"}} className='midGreenBody'>
             <FaTractor className='h1 pureWhiteText' />
           </div>
-          <div className='h3 midGreenText maxW200'>Buy farming resources with ease</div>
+          <div className='h3 midGreenText maxW200'>Reach great pool of workers</div>
           <div className='p1 midBlackText maxW200'>
             Farmers are can buy viable resources from trusted stores any moment with ease
             Farmers are can buy viable resources from trusted stores any moment with ease

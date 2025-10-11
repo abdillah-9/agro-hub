@@ -94,6 +94,7 @@ html, body{
   width: 100%;
   max-width: 320px;
   gap: 10px;
+  height: 80px;
 }
 .inputContainer2{
   display: flex;

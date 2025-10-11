@@ -72,6 +72,13 @@ export default function Form() {
           <input type={"text"} name='cropName' style={values} placeholder='Eg: Cotton'/>
         </div>
         <div className='flex-Row-Wrap'>
+          <span style={props}>Product type</span>
+          <select>
+            <option value={'instrument'}>instrument</option>
+            <option value={'reagent'}>reagent</option>
+          </select>
+        </div>
+        <div className='flex-Row-Wrap'>
           <span style={props}>Unit</span>
           <input style={values} type='text' name='unit'  placeholder='Eg: kg' />
         </div>

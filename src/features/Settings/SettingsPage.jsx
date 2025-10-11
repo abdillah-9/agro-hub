@@ -199,7 +199,8 @@ function SystemSettings(){
 
   const [toggleButton, setToggleButton] = useState({
     userManagement:true,
-    privacySettings:false,
+    privacySettings:true,
+    userRoles:false,
   });
 
   const toggleButtonAction = (buttonName)=>{
@@ -260,6 +261,21 @@ function SystemSettings(){
       role:"farmer",
     }
   ]
+
+  const roles=[
+    {
+      id:1,
+      role:"farmer",
+  },
+    {
+      id:2,
+      role:"supplier",
+  },
+    {
+      id:3,
+      role:"seller",
+  },
+]
   return(
     <div className='flex-Column-Grow-Gap'>
       <div onClick={()=>{toggleButtonAction("userManagement")}}  
@@ -385,9 +401,40 @@ function SystemSettings(){
               <input type='checkbox' name='resourcesSeller'/>
             </div>
           </div>
-        </div>
-        
+        </div>  
       </div>
+
+      {/** User Roles */}
+      <div onClick={()=>{toggleButtonAction("userRoles")}}  
+      className='centered wFit p8px link midGreenBody gap10px' style={dropdown}>
+        <span>User Roles</span> 
+        <BsArrowDownCircleFill style={toggleButton.userRoles ? rotate180 : rotate360 } 
+        className='h4'/>
+      </div>
+      <div style={!toggleButton.userRoles ? hide : {...hide, ...show}}   
+      className='flex-Column'>
+        <p className='h4 pV10px'>User Roles</p>
+        <button type='button' className='wFit link'>Create New Role</button>
+        <section className='flex-Row-Wrap-Gap'>
+        {
+          roles && roles != undefined ? roles.map((entry, index)=>(
+            <div className='flex-Row-Wrap-Gap centeredH p1 p25px maxW300' key={index} 
+            style={entry.id%2 == 0 ? {backgroundColor:"rgb(150,150,150)"} : {backgroundColor:"rgb(200,200,200)"}}>
+              <span style={inputField}>{entry.role}</span>
+              <button type='submit' name='submit' className='gap7px centered' style={{...inputField, ...submitButton}}>
+                <TbLockPassword className='h4'/> Edit role
+              </button>
+              <button className='centered wFit p8px link gap7px p1 bRad5' 
+              style={{...submitButton, backgroundColor:"rgba(250, 46, 46, 0.45)", color:"rgb(83, 0, 0)"}}>
+                <RiDeleteBin5Fill/>
+                <span>Delete role</span>
+              </button>
+            </div>
+          )) : <div>No role found ...</div>
+        }
+        </section>
+      </div>
+
     </div> 
   )
 }

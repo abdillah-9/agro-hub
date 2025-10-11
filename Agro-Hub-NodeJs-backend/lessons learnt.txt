@@ -1,0 +1,227 @@
+MIGRATIONS USING KNEX 
+
+Installation:-
+1. install (pg or sqlite or mysql or all of them based on ur needs) by 
+npm install knex pg OR npm install knex mysql2 OR npm install knex sqlite3
+
+2. create knexFile.js
+npx knex init
+
+3. update it based on ur setup EG:
+// Update with your config settings.
+
+/**
+ * @type { Object.<string, import("knex").Knex.Config> }
+ */
+module.exports = {
+
+  development: {
+    client: 'mysql2',
+    connection: {
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'agrohub'
+    },
+    migrations: {
+      directory: './migrations'
+    }
+  },
+
+  staging: {
+    client: 'mysql2',
+    connection: {
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'agrohub'
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      directory: './migrations',
+      tableName: 'knex_migrations'
+    }
+  },
+
+  production: {
+    client: 'mysql2',
+    connection: {
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'agrohub'
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      directory: './migrations',
+      tableName: 'knex_migrations'
+    }
+  }
+
+};
+_______________________________________________________________________________________________________
+
+Usage:-
+
+1. create migration file
+npx knex migrate:make create_users_table
+
+2. edit your migration to fit your needs EG:
+exports.up = function(knex) {
+  return knex.schema.createTable('users', function(table) {
+    table.increments('id'); // AUTO_INCREMENT + PRIMARY KEY
+    table.string('fname', 20).notNullable();
+    table.string('lname', 20).notNullable();
+    table.string('username_or_email', 30).notNullable();
+    table.string('user_password', 20).notNullable();
+    table.string('user_role', 10).notNullable();
+  });
+};
+
+exports.down = function(knex) {
+  return knex.schema.dropTable('users');
+};
+
+3. Run migration file (choose whether its development or production)
+npx knex migrate:make create_users_table --env development 
+
+4. Rollback Migrations
+npx knex migrate:rollback --env development
+
+NB: Above command rollback/delete the latest batch of migration (migration files ran in the same migrate command).
+
+npx knex migrate:rollback --all --env development
+
+NB: Above command is dangerous in production COZ it deletes all tables hence you'll loose users' data, hence -
+do it in development only...
+_________________________________________________________________________________________________________________
+
+How to solve failed migration file (Migration file ran successful but actual table/expected changes failed)
+
+1. Delete the broke migration file
+
+2. Run this command in SQL dashboard the remove the cached knex activity
+DELETE FROM knex_migrations WHERE name LIKE '%resources.js%';
+
+3. Then re-create that migration and run it.
+_________________________________________________________________________________________________________________
+
+GRAPH-QL GUIDANCE
+
+How Query works
+
+✅ 1. If price or name is missing from the GraphQL request…
+Example mutation:
+mutation UploadCrop($name: String!, $price: Int!) {
+  uploadCrop(name: $name, price: $price) {
+    id
+    success
+    message
+  }
+}
+
+Then the client sends:
+{
+  "query": "...",
+  "variables": {
+    "name": "Maize"
+    // price is missing ❌
+  }
+}
+
+🔥 RESULT:
+
+❌ Yes — the GraphQL server will throw an error immediately (even before your resolver runs):
+
+{
+  "errors": [
+    {
+      "message": "Variable \"$price\" of required type \"Int!\" was not provided.",
+      ...
+    }
+  ]
+}
+
+
+✅ So you're right: backend throws the error automatically via GraphQL engine.
+
+✅ 2. If response fields (id, success, message) are missing from the server response…
+
+Example expectation from frontend:
+
+uploadCrop(...) {
+  id
+  success
+  message
+}
+
+
+But what if your backend (resolver) only returns:
+
+return {
+  success: true
+}
+
+🔥 RESULT:
+
+The frontend does not throw an error.
+
+GraphQL will return null for any missing fields.
+
+{
+  "data": {
+    "uploadCrop": {
+      "id": null,
+      "success": true,
+      "message": null
+    }
+  }
+}
+
+
+So:
+
+✅ No error is thrown on frontend.
+
+❗ But it’s up to you to check for null values and handle them properly in UI.
+
+✅ 3. If you request a field that does NOT exist in schema (e.g. you type uploadCrops instead of uploadCrop)
+❌ YES — that’s an immediate error.
+
+Example:
+
+mutation {
+  uploadCrops(name: "Maize", price: 1200) {
+    id
+  }
+}
+
+
+But backend only has uploadCrop, not uploadCrops.
+
+🔥 RESULT:
+{
+  "errors": [
+    {
+      "message": "Cannot query field \"uploadCrops\" on type \"Mutation\"."
+    }
+  ]
+}
+
+
+✅ This is caught by GraphQL during validation, before it even runs your code.
+
+✅ Final Summary
+Scenario	What Happens
+Missing required variable (String!, Int!)	❌ GraphQL backend throws validation error immediately
+Missing field in server response (id, message)	✅ No error, just null returned to frontend
+Typo in operation name or field (uploadCrops)	❌ GraphQL error: field not found in schema
+_______________________________________________________________________________________________________
+
+

@@ -1,37 +1,107 @@
-import React from 'react'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function SignIn() {
+export default function SignIn({setActiveLInk, activeLink}) {
+  const navigate = useNavigate();
+
+  async function handleSubmit(e){
+    e.preventDefault();
+    //generate formData
+    const formData = new FormData();
+    const user_password = e.target.user_password.value;
+    const username_or_email = e.target.username_or_email.value;
+    formData.append('user_password', user_password);
+    formData.append('username_or_email', username_or_email);
+
+    if(user_password.length > 8 || user_password.length < 6){
+      return alert('password must be between 6 and 8');
+    }
+    if(!/[a-zA-Z]/.test(user_password) || !/[0-9]/.test(user_password) || !/[@!$^*-+?%]/.test(user_password)){
+      return alert('Password must contain atlest a letter,number and special character');
+    }
+    if(/[\s<>'"`\\//]/.test(user_password)){
+      return alert("Password should not have slashes, coutes, angle brackets and white spaces");
+    }
+
+    try{
+      const res = await fetch('http://localhost:4000/sign_in',{
+        body: formData, 
+        method: 'POST',
+        credentials:'include'
+      });
+
+      if(res.ok){
+        const data = await res.json();
+        console.log(data);
+        alert(data.message);
+        return navigate('/mainApp');
+      }
+      else{
+        console.log('something happened');
+      }
+    }
+    catch(e){
+
+    }
+  }
   return (
     <div className='flex-Row-Grow-Wrap-Gap-Space_Between centered p25px blur'>
-      <div className='w45vw minW200 maxW700 pureWhiteText flex-Column-Grow-Gap  centeredV'>
-        <div className='h2 maxW500 pureWhiteText'>ACHIEVE YOUR GREATNESS WITH US</div>
-        <div className='h3 maxW500 midWhiteText'>Where your dream destination becomes reality</div>
+      
+      {/* Left Panel - Marketing Section */}
+      <div className='w45vw minW200 maxW700 pureWhiteText flex-Column-Grow-Gap centeredV'>
+        <div className='h2 maxW500 pureWhiteText'>
+          Grow Together, Trade Smarter
+        </div>
+        <div className='h3 maxW500 midWhiteText'>
+          Where agri-buyers, sellers and service providers meet
+        </div>
         <div className='h4 paleWhiteText'>
-          Embark your farming journey where every inch of its pros is within the palm of your hand
+          From farm inputs to bulk crop deals—build your network, boost your business
         </div>
       </div>
-      <form className='w45vw minW200 maxW500 pureWhiteText flex-Column-Grow-Gap centered paleWhiteBody p25px bRad20
-      pureWhiteText'>
+
+      {/* Right Panel - Sign In Form */}
+      <form onSubmit={handleSubmit}
+        className='w45vw minW200 maxW500 pureWhiteText flex-Column-Grow-Gap centered paleWhiteBody p25px bRad20'
+      >
         <div className='inputContainer1'>
-          <label>Email/Username</label>
-          <input type='text' name='email_username' placeholder='Enter Email or username' 
-          className='input1 midWhiteBody'/>
+          <label>Email or Username</label>
+          <input 
+            type='text' 
+            name='username_or_email' 
+            placeholder='Enter email or username' 
+            className='input1 midWhiteBody' 
+          />
         </div>
+
         <div className='inputContainer1'>
           <label>Password</label>
-          <input type='password' name='pword' placeholder='********' className='input1 midWhiteBody'/>
+          <input 
+            type='password' 
+            name='user_password' 
+            placeholder='********' 
+            className='input1 midWhiteBody' 
+          />
         </div>
+
         <div className='inputContainer1 p2'>
-          <span className='specLink '>Forgot password</span>
+          <span className='specLink'>Forgot Password?</span>
         </div>
-        <div className='inputContainer1'>
-          <button type='submit' className='input1 submit1 midGreenBody pureWhiteText'>SIGN IN</button>
+
+        <div className='inputContainer1' style={{height:'fit-content'}}>
+          <button 
+            type='submit' 
+            className='input1 submit1 midGreenBody pureWhiteText'
+          >
+            SIGN IN
+          </button>
         </div>
+
         <div className='inputContainer2 p2'>
-          <span className=''>Are you new?</span> 
-          <span className='specLink'>create an account</span>
+          <span>New here? </span>
+          <span className='specLink' onClick={()=>{setActiveLInk("SignUp")}}>Create an account</span>
         </div>
-      </form>     
+      </form>
     </div>
-  )
+  );
 }

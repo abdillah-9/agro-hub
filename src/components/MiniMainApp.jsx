@@ -16,7 +16,7 @@ export default function MiniMainApp() {
   console.log("active menu inside minimainapp is "+activeMenu)
 
   return (
-    <div className='midWhiteBody flex-Column-Grow h80vh'>
+    <div className='flex-Column-Grow h80vh' style={{backgroudColor:"rgb(245, 255, 238)"}}>
       {
         activeMenu == "dashboard" ? <DashboardPage calcWidth={calcWidth}/> :
         activeMenu == "buy resources" ? <BuyResourcesPage calcWidth={calcWidth}/> :
