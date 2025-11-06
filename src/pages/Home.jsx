@@ -34,8 +34,9 @@ function MiniHome({setActiveLInk, activeLink}){
     
   )
  } 
-export default function Home() {
-  const [activeLink, setActiveLInk] = useState("MiniHome");
+export default function Home({passedActiveLink}) {
+  const setLinkState =  passedActiveLink ||  "MiniHome";
+  const [activeLink, setActiveLInk] = useState(setLinkState);
 
   return (
     <div style={main}>

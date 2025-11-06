@@ -1,50 +1,35 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext} from 'react'
 import { AppContext } from '../../pages/MainApp';
-import { HiPhoto, HiXCircle } from 'react-icons/hi2';
+import { HiPhoto, HiXCircle, HiXMark } from 'react-icons/hi2';
 import { TbLibraryPhoto } from 'react-icons/tb';
 import { PiImagesLight } from 'react-icons/pi';
+import { AuthContext } from '../../AuthProvider';
 
-export default function Form() {
-  const {sellCropsForm, setShowOverlay, setSellCropsForm} = useContext(AppContext);
-  const [selectedFile, setSelectedFile] = useState();
+export default function Form({formData, setFormData, activateRefresh, setActivateRefresh}) {
+  const {sellCropsForm, setShowOverlay, setSellCropsForm, setSelectedFile, selectedFile} = useContext(AppContext);
+  const {userData} = useContext(AuthContext);
+  const {user_id, user_role, user_fname, user_lname, user_photo} = userData;
 
+  console.log("formData :"+JSON.stringify(formData));
+  console.log('activateRefresh '+activateRefresh)
+  
   function setFile(event){
-    const file = event.target.files[0];
+    const file = event?.target?.files[0];
     if(file){
-      setSelectedFile(file.name);
+      setSelectedFile(file?.name);
     }
     else{
       setSelectedFile(false);
+      console.log("NO file")
     }
   }
 
   function restoreFormAndOverlay(){
     setShowOverlay(false);
     setSellCropsForm(false);
+    setFormData(null);
   }
   const calcHeight = sellCropsForm ? "100vh" : "0vh";
-
-  //Get user
-  // const {userData} = UseGetUser();
-  const userData= { id:1, fname:"Jumbo", lname:"Mwalutenge", }
-
-  //Get current date
-  const currentDate = new Date().toISOString().slice(0, 10);
-
-  const demoData =
-    {
-        "id":1,
-        "photo":"",
-        "created_date":"12th Jun 2025",
-        "resource_name":"Handhoe",
-        "description":"",
-        "quantity":26,
-        "price":11000,
-        "unit":"tone",
-        "location":"Singida",
-        "receipt":"",
-        "status":"onsale",
-    }
 
   const mainContainer={
       zIndex:3,
@@ -69,57 +54,121 @@ export default function Form() {
   function restoration(){
     setShowOverlay(false);
     setSellCropsForm(false);
+    setFormData(null);
   }
 
   async function onFormSubmit(e){
     e.preventDefault();
+    //validate Inputs
+    if(!/^[\w\s]+$/.test(e.target.crop_name.value)){
+      return alert(`Crop name must include filled with 
+      letters, underscore or white-spaces only`);
+    }
+    if(!/^[\w\s\.]+$/.test(e.target.unit.value)){
+      return alert(`Unit must be filled`);
+    }
+    if(!/^[\w\s\.]+$/.test(e.target.minimum_sellable_quantity.value)){
+      return alert(`minimum sellable quantity is compulsory must be filled`);
+    }
+    if(!/^[\d\.]+$/.test(e.target.total_quantity.value)){
+      return alert(`Total quantity can be either
+      integer or float`);
+    }
+    if(!/^[\d\.]+$/.test(e.target.price_per_minimum_sellable_quantity.value)){
+      return alert(`Price should be either float 
+      or integer`);
+    }
+    if(/^[<>/\\*&]+$/.test(e.target.description.value)){
+     return alert(`You cannot use tags (< or >), 
+      slashes( / or \), star (*) and & special characters`) 
+    }
+    if(e.target.crop_photo.files[0] && 
+      !['image/jpeg', 'image/jpg', 'image/png'].includes(e.target.crop_photo.files[0].type)){
+      return alert("Only jpeg, jpg and png image formats are allowed");
+    }
+    if(e.target.crop_photo.files[0] && e.target.crop_photo.files[0].size > 1024*1024){
+       return alert("Image must be less or equal to 1MB");
+    }
+
     const form = e.target;
-    const formData = new FormData(form);
-   
+    const formDataBody = new FormData(form);
+    if(formData){
+      formDataBody.append('edit_mode',true);
+    }
+    else{
+      formDataBody.append('edit_mode',false);
+    }
+
     // send data to backend using fetch() API
     try{
-      const res = await fetch("http://localhost:4000/upload_crop/",{
-        body: formData,
+      const res = await fetch("http://localhost:4000/upload_crop_for_sale",{
+        body: formDataBody,
         method: "POST",
       });
       //check res.ok
       if(!res.ok){
+        setFormData(null);
+        setActivateRefresh((prev)=>{return !prev});
+        console.log(activateRefresh+" activate Refresh");
         alert(res.status);
       }
       if(res.ok){
         const data = await res.json();
-        console.log(data.message);
+        restoreFormAndOverlay();
+        setActivateRefresh((prev)=>{return !prev});
+        console.log(activateRefresh+" activate Refresh");
+        alert(data.message);
       }
     }
     catch(e){
-      alert(JSON.stringify(e));
+      console.log("catched err is :"+e);
     }
   }
 
   return (
-    <form style={mainContainer} onSubmit={onFormSubmit}>
+    <form style={mainContainer} onSubmit={onFormSubmit} >
       <div style={buttons}>
         <span style={cancelCircle} onClick={restoration}><HiXCircle/></span>
       </div>
-      <img src='aaa' height={120} width={"100%"}/>
-      <div>
+      {/* <img src='aaa' height={120} width={"100%"}/> */}
+      <div key={formData == false && Date.now()}>
         <div className='flex-Row-Wrap'>
-          <span style={props}>Seller</span>
-          <span style={{...values, cursor:"not-allowed"}}>{userData.fname} {userData.lname}</span>
-          <input type={"text"} name='sellerID' style={{...values,display:"none"}} defaultValue={userData.id}/>
+          <span style={props}>Seller is</span>
+          <span style={{...values, cursor:"not-allowed"}}>
+            {formData?.fname || user_fname} {formData?.lname || user_lname}
+          </span>
+          <input type={"text"} name='row_id' style={{display:"none"}} defaultValue={formData?.row_id}/>
+          <input type={"text"} name='seller_id' style={{...values,display:"none"}} 
+            defaultValue={user_id}/>
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Date posted</span>
-          <span style={{...values, cursor:"not-allowed"}}>{currentDate}</span>
-          <input type='date' name='datePosted' defaultValue={currentDate} style={{display:"none"}}/>
+          <span style={{...values, cursor:"not-allowed"}}>
+            {
+              formData?.created_at ?
+              new Date(formData?.created_at || "").toLocaleDateString('en-Us',
+              {weekday:'long',day:'numeric', month:'short', year:'numeric'}) 
+              : new Date().toLocaleDateString('en-Us',{
+                weekday:'long',day:'numeric', month:'short', year:'numeric'
+              })      
+            }
+          </span>
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Product name</span>
-          <input type={"text"} name='cropName' style={values} placeholder='Eg: Cotton'/>
+          <input type={"text"} name='crop_name' style={values} placeholder='Eg: Cotton'
+            defaultValue={formData?.crop_name}
+          />
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Unit</span>
-          <select name='unit'style={values}>
+          <select name='unit' style={{...values, border:"1px solid white"}} >
+            <option value={formData?.unit}>
+              {
+                formData?.unit == 'g' ? "gram" : formData?.unit == 'kg' ? "killogram" :
+                formData?.unit == 'tone' ? "tone" : ""
+              }
+            </option>
             <option value={'kg'}> killogram </option>
             <option value={'g'}> gram </option>
             <option value={'tone'}>tone</option>
@@ -127,11 +176,21 @@ export default function Form() {
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Total quantity</span>
-          <input style={values} type="number" name='quantity'  placeholder='Eg: 12'/>
+          <input style={values} type="number" name='total_quantity'  placeholder='Eg: 12'
+            defaultValue={formData?.total_quantity}
+          />
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Minimum sellable quantity</span>
-          <select name='minimumSellableQuantity' style={{...values, border:"0px solid white"}}>
+          <select name='minimum_sellable_quantity' style={{...values, border:"1px solid white"}}
+            defaultValue={formData?.minimum_sellable_quantity}>
+            <option value={formData?.minimum_sellable_quantity}>
+              {
+                formData?.minimum_sellable_quantity == 0.5 ?  formData?.minimum_sellable_quantity + (" (Half)") :
+                formData?.minimum_sellable_quantity == 0.25 ?  formData?.minimum_sellable_quantity + (" (Quatre) ") :
+                formData?.minimum_sellable_quantity 
+              }
+            </option>
             <option value={0.25}> quatre (1/4) </option>
             <option value={0.5}> half (1/2) </option>
             <option value={1}>1</option>
@@ -141,18 +200,29 @@ export default function Form() {
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Price (per minimum sellable quantity)</span>
-          <input style={values} type='text' name='price'  placeholder='1200 Tsh' />
+          <input style={values} type='number' name='price_per_minimum_sellable_quantity'  placeholder='1200 Tsh' 
+            defaultValue={formData?.price_per_minimum_sellable_quantity}/>
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Description (Optional)</span>
-          <input type="text" name='description' style={values} placeholder='This crop is ...' />
+          <input type="text" name='description' style={values} placeholder='This crop is ...' 
+            defaultValue={formData?.description}
+          />
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Photo (Optional)</span>
-          <input id='photo' style={{display:"none"}} type='file' name='photo' onInput={setFile}/>
+          <input id='photo' style={{display:"none"}} type='file' name='crop_photo' onInput={setFile}/>
           <label htmlFor='photo' style={{...values, flexDirection:"row"}}  className='centeredH'>
-            <PiImagesLight className='midGreenText' style={{cursor:"pointer", fontSize:"27px"}}/>
-            <span className='p2'>{ !selectedFile ? "No file chosen" : selectedFile.file_name}</span>
+            {
+              selectedFile ? 
+              <HiXCircle color='rgb(177, 10, 10)' fontSize={'30px'} className='link' 
+                onMouseDown={(e)=>{e.preventDefault(); setSelectedFile(false);
+                  e.target.crop_photo.files[0] = null}}/> :
+              <PiImagesLight className='midGreenText' style={{cursor:"pointer", fontSize:"27px"}}/>
+            }
+            <span className='p2' style={{width:"100%", overflow:'hidden'}}>
+              { !selectedFile ? "No file chosen" : selectedFile}
+            </span>
           </label>
         </div>
         <div className='flex-Row-Wrap gap10px pV10px'>

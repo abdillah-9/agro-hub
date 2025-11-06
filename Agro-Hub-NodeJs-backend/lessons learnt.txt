@@ -225,3 +225,41 @@ Typo in operation name or field (uploadCrops)	❌ GraphQL error: field not found
 _______________________________________________________________________________________________________
 
 
+############### MULTER HANDLE ERRORS and return res.json to users not silently fault ##############
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: 'uploads/',
+  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+});
+
+const upload_image = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const allowed_mime_types = ['image/jpeg', 'image/jpg', 'image/png'];
+
+    if (!allowed_mime_types.includes(file.mimetype)) {
+      req.wrong_mime_type = "wrong mime type";
+      return cb(new Error("wrong mime type"), false);
+    }
+
+    cb(null, true);
+  },
+  limits: { fileSize: 1024 * 1024 } // still enforce limit
+}).single('image');
+
+// Middleware wrapper to catch Multer's fileSize error
+function handleMulterError(err, req, res, next) {
+  if (err) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: 'File too large (>1MB)' });
+    }
+    if (req.wrong_mime_type) {
+      return res.status(400).json({ error: req.wrong_mime_type });
+    }
+    return res.status(400).json({ error: err.message });
+  }
+  next();
+}
+
+

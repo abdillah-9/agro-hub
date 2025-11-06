@@ -7,7 +7,6 @@ exports.up = function(knex) {
         column.increments('id');
         column.string('public_id', 30).unique().notNullable(); // new public ID
         column.string('status', 10).notNullable();
-        column.integer('seller_id').unsigned().notNullable();  // integer FK (users.id)
         column.integer('buyer_id').unsigned().notNullable();   // integer FK (users.id)
         column.integer('ordered_resource_id').unsigned().notNullable(); // integer FK (crops.id)
         column.decimal('ordered_resource_quantity', 10, 2).notNullable();
@@ -16,7 +15,6 @@ exports.up = function(knex) {
         column.timestamps(true, true);
         column.timestamp('deleted_at').nullable();
         // Foreign key constraints 
-        column.foreign('seller_id').references('id').inTable('users').onDelete('CASCADE');
         column.foreign('buyer_id').references('id').inTable('users').onDelete('CASCADE');
         column.foreign('ordered_resource_id').references('id').inTable('resources').onDelete('CASCADE');
     })

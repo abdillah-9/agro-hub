@@ -79,7 +79,7 @@ export default function SignUp({setActiveLInk, activeLink}) {
         const data = await res.json();
         console.log(data);
         alert(data.message);
-        return setActiveLInk('SignIn');
+        data.status != 200 || setActiveLInk('SignIn');
       }
       else{
         console.log('error response from backend ( status code is not in 200s range )');

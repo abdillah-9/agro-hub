@@ -1,29 +1,20 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { AppContext } from '../../pages/MainApp';
 import { HiPhoto, HiXCircle } from 'react-icons/hi2';
+import { AuthContext } from '../../AuthProvider';
+import { PiImagesLight } from 'react-icons/pi';
 
-export default function Form() {
-  const {sellResourceForm, setShowOverlay, setSellResourceForm} = useContext(AppContext);
-  const calcHeight = sellResourceForm ? "100vh" : "0vh";
+export default function Form({formData, setFormData, setResource_data, setRefresh}) {
+  const {sellResourceForm, setShowOverlay, setSellResourceForm } = useContext(AppContext);
+  const {userData, setUserData} = useContext(AuthContext);
+  const {user_id, user_role, user_fname, user_lname, user_photo} = userData;
+  const [loading, setLoading] = useState(true);
+  const [ selectedFile, setSelectedFile] = useState(null);
+
+  const calcHeight = sellResourceForm ? "100vh" : "80vh";
 
   //Get current date
   const currentDate = new Date().toISOString().slice(0, 10);
-
-  const demoData =
-      {
-          "id":1,
-          "photo":"",
-          "created_date":"12th Jun 2025",
-          "resource_name":"Handhoe",
-          "description":"",
-          "quantity":26,
-          "price":11000,
-          "unit":"tone",
-          "seller":"Jumbo Mwalutenge",
-          "location":"Singida",
-          "receipt":"",
-          "status":"onsale",
-      }
 
   const mainContainer={
       zIndex:3,
@@ -45,65 +36,209 @@ export default function Form() {
       gap:"15px",
   }
 
-  function restoration(){
+  function setFile(event){
+    const file = event?.target?.files[0];
+    if(file){
+      setSelectedFile(file?.name);
+    }
+    else{
+      setSelectedFile(false);
+      console.log("No file")
+    }
+  }
+
+   function restoration(){
     setShowOverlay(false);
     setSellResourceForm(false);
+    setFormData(null);
+    setSelectedFile(false);
+  }
+
+  async function onFormSubmit(e){
+    e.preventDefault();
+    //validate Inputs
+    if(!/^[\w\s]+$/.test(e.target.resource_name.value)){
+      return alert(`resource name must include filled with 
+      letters, underscore or white-spaces only`);
+    }
+    if(!/^[\w\s\.]+$/.test(e.target.unit.value)){
+      return alert(`Unit must be filled`);
+    }
+    if(!/^[\w\s\.]+$/.test(e.target.minimum_sellable_quantity.value)){
+      return alert(`minimum sellable quantity is compulsory must be filled`);
+    }
+    if(!/^[\d\.]+$/.test(e.target.total_quantity.value)){
+      return alert(`Total quantity can be either
+      integer or float`);
+    }
+    if(!/^[\d\.]+$/.test(e.target.price_per_minimum_sellable_quantity.value)){
+      return alert(`Price should be either float 
+      or integer`);
+    }
+    if(/^[<>/\\*&]+$/.test(e.target.description.value)){
+     return alert(`You cannot use tags (< or >), 
+      slashes( / or \), star (*) and & special characters`) 
+    }
+    if(e.target.resource_photo.files[0] && 
+      !['image/jpeg', 'image/jpg', 'image/png'].includes(e.target.resource_photo.files[0].type)){
+      return alert("Only jpeg, jpg and png image formats are allowed");
+    }
+    if(e.target.resource_photo.files[0] && e.target.resource_photo.files[0].size > 1024*1024){
+       return alert("Image must be less or equal to 1MB");
+    }
+
+    const form = e.target;
+    const formDataBody = new FormData(form);
+    if(formData){
+      formDataBody.append('edit_mode',true);
+    }
+    else{
+      formDataBody.append('edit_mode',false);
+    }
+
+    // send data to backend using fetch() API
+    try{
+      const res = await fetch("http://localhost:4000/upload_resources_for_sale",{
+        body: formDataBody,
+        method: "POST",
+      });
+      //check res.ok
+      if(!res.ok){
+        const data = await res.json();
+        setFormData(null);
+        setResource_data(data); 
+        alert(res.status);
+      }
+      if(res.ok){
+        const data = await res.json();
+        restoration();
+        setRefresh((prev)=>!prev);
+        alert(data.message);
+      }
+    }
+    catch(e){
+      console.log("catched err is :"+e);
+    }
+    finally{
+      setLoading(false);
+    }
   }
 
   return (
-    <form style={mainContainer}>
-      <div style={buttons}>
-        <span style={cancel} onClick={restoration}><HiXCircle/></span>
-      </div>
-      <img src='aaa' height={120} width={"100%"}/>
-      <div>
-        <div className='flex-Row-Wrap'>
-          <span style={props}>Seller</span>
-          <span style={{...values, cursor:"not-allowed"}}>{demoData.seller}</span>
+     <form style={mainContainer} onSubmit={onFormSubmit} >
+          <div style={buttons}>
+            <span style={cancelCircle} onClick={restoration}><HiXCircle/></span>
+          </div>
+          {/* <img src='aaa' height={120} width={"100%"}/> */}
+          <div key={formData == null && Date.now()}>
+            <div className='flex-Row-Wrap'>
+              <span style={props}>Seller is</span>
+              <span style={{...values, cursor:"not-allowed"}}>
+                {formData?.fname || user_fname} {formData?.lname || user_lname}
+              </span>
+              <input type={"text"} name='row_id' style={{display:"none"}} defaultValue={formData?.row_id}/>
+              <input type={"text"} name='seller_id' style={{...values,display:"none"}} 
+                defaultValue={user_id}/>
+            </div>
+            <div className='flex-Row-Wrap'>
+              <span style={props}>Date posted</span>
+              <span style={{...values, cursor:"not-allowed"}}>
+                {
+                  formData?.created_at ?
+                  new Date(formData?.created_at || "").toLocaleDateString('en-Us',
+                  {weekday:'long',day:'numeric', month:'short', year:'numeric'}) 
+                  : new Date().toLocaleDateString('en-Us',{
+                    weekday:'long',day:'numeric', month:'short', year:'numeric'
+                  })      
+                }
+              </span>
+            </div>
+            <div className='flex-Row-Wrap'>
+              <span style={props}>Product name</span>
+              <input type={"text"} name='resource_name' style={values} placeholder='Eg: Rungu pestcide'
+                defaultValue={formData?.resource_name}
+              />
+            </div>
+            <div className='flex-Row-Wrap'>
+              <span style={props}>Unit</span>
+              <select name='unit' style={{...values, border:"1px solid white"}} >
+                <option value={formData?.unit}>
+                  {
+                    formData?.unit == 'g' ? "gram" : formData?.unit == 'kg' ? "killogram" :
+                    formData?.unit == 'tone' ? "tone" : ""
+                  }
+                </option>
+                <option value={'kg'}> killogram </option>
+                <option value={'g'}> gram </option>
+                <option value={'tone'}>tone</option>
+              </select>
+            </div>
+            <div className='flex-Row-Wrap'>
+              <span style={props}>Total quantity</span>
+              <input style={values} type="number" name='total_quantity'  placeholder='Eg: 12'
+                defaultValue={formData?.total_quantity}
+              />
+            </div>
+            <div className='flex-Row-Wrap'>
+              <span style={props}>Minimum sellable quantity</span>
+              <select name='minimum_sellable_quantity' style={{...values, border:"1px solid white"}}
+                defaultValue={formData?.minimum_sellable_quantity}>
+                <option value={formData?.minimum_sellable_quantity}>
+                  {
+                    formData?.minimum_sellable_quantity == 0.5 ?  formData?.minimum_sellable_quantity + (" (Half)") :
+                    formData?.minimum_sellable_quantity == 0.25 ?  formData?.minimum_sellable_quantity + (" (Quatre) ") :
+                    formData?.minimum_sellable_quantity 
+                  }
+                </option>
+                <option value={0.25}> quatre (1/4) </option>
+                <option value={0.5}> half (1/2) </option>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+              </select>
+            </div>
+            <div className='flex-Row-Wrap'>
+              <span style={props}>Price (per minimum sellable quantity)</span>
+              <input style={values} type='number' name='price_per_minimum_sellable_quantity'  placeholder='1200 Tsh' 
+                defaultValue={formData?.price_per_minimum_sellable_quantity}/>
+            </div>
+            <div className='flex-Row-Wrap'>
+              <span style={props}>Description (Optional)</span>
+              <input type="text" name='description' style={values} placeholder='This resource is ...' 
+                defaultValue={formData?.description}
+              />
+            </div>
+            <div className='flex-Row-Wrap'>
+              <span style={props}>Photo (Optional)</span>
+              <input id='photo' style={{display:"none"}} type='file' name='resource_photo' onInput={setFile}/>
+              <label htmlFor='photo' style={{...values, flexDirection:"row"}}  className='centeredH'>
+                {
+                  selectedFile ? 
+                  <HiXCircle color='rgb(177, 10, 10)' fontSize={'30px'} className='link' 
+                    onMouseDown={(e)=>{e.preventDefault(); setSelectedFile(false);
+                      e.target.resource_photo.files[0] = null}}/> :
+                  <PiImagesLight className='midGreenText' style={{cursor:"pointer", fontSize:"27px"}}/>
+                }
+                <span className='p2' style={{width:"100%", overflow:'hidden'}}>
+                  { !selectedFile ? "No file chosen" : selectedFile}
+                </span>
+              </label>
+            </div>
+        <div className='flex-Row-Wrap gap10px pV10px'>
+          <span style={cancel} onClick={restoration}>Cancel</span>
+          <button type='submit' style={submitForm}  className='pureGreenBody pureWhiteText'>Submit</button>
         </div>
-        <div className='flex-Row-Wrap'>
-          <span style={props}>Date posted</span>
-          <span style={{...values, cursor:"not-allowed"}}>{currentDate}</span>
-          <input type="text" name='sellerID' defaultValue={demoData.id} style={{display:"none"}}/>
-          <input type='date' name='datePosted' defaultValue={currentDate} style={{display:"none"}}/>
-        </div>
-        <div className='flex-Row-Wrap'>
-          <span style={props}>Product name</span>
-          <input type={"text"} name='cropName' style={values} placeholder='Eg: Cotton'/>
-        </div>
-        <div className='flex-Row-Wrap'>
-          <span style={props}>Product type</span>
-          <select>
-            <option value={'instrument'}>instrument</option>
-            <option value={'reagent'}>reagent</option>
-          </select>
-        </div>
-        <div className='flex-Row-Wrap'>
-          <span style={props}>Unit</span>
-          <input style={values} type='text' name='unit'  placeholder='Eg: kg' />
-        </div>
-        <div className='flex-Row-Wrap'>
-          <span style={props}>Quantity</span>
-          <input style={values} type="number" name='quantity'  placeholder='Eg: 1'/>
-        </div>
-        <div className='flex-Row-Wrap'>
-          <span style={props}>Price (per each)</span>
-          <input style={values} type='text' name='price'  placeholder='1200 Tsh' />
-        </div>
-        <div className='flex-Row-Wrap'>
-          <span style={props}>Description (Optional)</span>
-          <input type="text" name='description' style={values} placeholder='This crop is ...' />
-        </div>
-        <div className='flex-Row-Wrap'>
-          <span style={props}>Photo (Optional)</span>
-          <input id='photo' style={{display:"none"}} type='file' name='photo' />
-          <label htmlFor='photo' style={values}>
-            <HiPhoto className='midGreenText h2' style={{cursor:"pointer"}}/>
-        </label>
-        </div>
-      </div>
-    </form>
+          </div>
+        </form>
   )
+}
+
+const submitForm={
+  border:"0px solid black",
+  borderRadius:"5px",
+  cursor:"pointer",
+  fontWeight:500,
+  padding:"10px",
 }
 
 const props={
@@ -139,12 +274,20 @@ const detail2={
   cursor:"not-allowed"
 }
 const cancel={
-  color:"rgb(177, 10, 10)",
-  backgroundColor:"white",
+  backgroundColor:"rgb(177, 10, 10)",
+  color:"white",
+  padding:"10px",
+  borderRadius:"5px",
   cursor:"pointer",
-  fontSize:"40px",
+  fontWeight:500,
 }
 const buttons={
   gap:"20px",
   borderBottom: "1px solid rgb(180,180,180)",
+}
+const cancelCircle={
+  color:"rgb(177, 10, 10)",
+  backgroundColor:"white",
+  cursor:"pointer",
+  fontSize:"40px",
 }

@@ -1,25 +1,28 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { AppContext } from '../../pages/MainApp';
+import { AuthContext } from '../../AuthProvider';
+import { HandleBuyCropsFormContext } from './BuyCropsPage';
 
-export default function Form() {
+export default function Form({crops_transactions, setRefresh}) {
   const {buyResourceForm, setShowOverlay, setBuyResourceForm} = useContext(AppContext);
-  const calcHeight = buyResourceForm ? "100vh" : "0vh";
+  const {userData} = useContext(AuthContext);
+  const {user_id} = userData;
+  const {buy_crop_form, setBuy_crop_form} = useContext(HandleBuyCropsFormContext);
+  const [crop_ordered,setCrop_ordered] = useState(0);
 
-  const demoData =
-      {
-          "id":1,
-          "photo":"",
-          "created_date":"12th Jun 2025",
-          "resource_name":"Handhoe",
-          "description":"",
-          "quantity":26,
-          "price":11000,
-          "unit":"tone",
-          "seller":"Jumbo Mwalutenge",
-          "location":"Singida",
-          "receipt":"",
-          "status":"onsale",
-      }
+  const calcHeight = buyResourceForm ? "100vh" : "0vh";
+  console.log('crops transactions '+JSON.stringify(crops_transactions));
+
+  if(!crops_transactions || !buy_crop_form){
+    return
+  }
+  const inputs = buy_crop_form;
+
+  inputs.created_at = new Date(inputs?.created_at).toLocaleDateString('en-Us',{
+    day:'2-digit',
+    month:'short',
+    year:'numeric'
+  });
 
   const formBody={
       zIndex:3,
@@ -41,22 +44,68 @@ export default function Form() {
       gap:"15px",
   }
 
-  function formSubmit(e){
-    e.preventDefault();
+  async function purchaseCrop(e){
+    try{
+      e.preventDefault();
+
+      //formulate formData
+      const form = e.target;
+      const formData = new FormData(form);
+      formData.append('price_per_minimum_sellable_quantity',inputs?.price_per_minimum_sellable_quantity);
+      
+      const res = await fetch('http://localhost:4000/make_crops_order',{
+        method:"POST",
+        body:formData
+      });
+
+      if(res.ok){
+        const data = await res.json();
+        console.log("make crop order: "+data);
+        alert(data.message);
+        setRefresh((prev)=>!prev);
+        restoreFormAndOverlay();
+      }
+      else{
+        alert("Shiiit")
+        console.log('cant insert crop order');
+      }
+    }
+    catch(e){
+      console.log('Error during making crop order: '+e);
+    }
   }
+
   function restoreFormAndOverlay(){
     setShowOverlay(false);
     setBuyResourceForm(false);
   }
 
   return (
-    <form onSubmit={()=>formSubmit(e)} style={formBody}>
+    <form onSubmit={purchaseCrop} style={formBody}>
       <div>        
-        <img src={""} height={100} width={"100%"}/>
+        <img src={"aa"} height={100} width={"100%"}/>
       </div>
       <div style={{...purchaseInputs,  borderBottom: "1px solid rgb(180,180,180)",paddingBottom:"15px"}}>
         <label style={detail}>Set quantity</label>
-        <input type='number' name='price' placeholder='2' style={{...detail2, cursor:"pointer"}}/>
+        <input type="number" step={inputs?.minimum_sellable_quantity} 
+          onInput={(e)=>{setCrop_ordered(e.target.value)}} style={{...detail2, cursor:"pointer"}}
+          min={inputs?.minimum_sellable_quantity} max={inputs?.total_quantity}
+          value={crop_ordered} name='ordered_crop_quantity' 
+        />
+        <label style={detail}>Expected cost</label>
+        <span style={{...detail2, cursor:"not-allowed"}}>
+          {inputs?.price_per_minimum_sellable_quantity * (crop_ordered/inputs?.minimum_sellable_quantity)}
+        </span>    
+        <input type='number' name='paid_amount' style={{display:'none'}} readOnly
+          value={inputs?.price_per_minimum_sellable_quantity * (crop_ordered/inputs?.minimum_sellable_quantity)} 
+        />
+        <input type='text' name='public_id' 
+          defaultValue={Math.random()+"_"+user_id} style={{display:'none'}}/>
+        <input type='text' name='buyer_id' defaultValue={user_id} style={{display:'none'}}/>
+        <input type='text' name='status' defaultValue={"pending"} style={{display:'none'}}/>
+        <input type='text' name='purchase_receipt' defaultValue={"N/A"} style={{display:'none'}}/>
+        <input type='text' name='ordered_crop_id' defaultValue={inputs?.ordered_crop_id} style={{display:'none'}}/>
+        <input type='number' name='total_quantity' defaultValue={inputs?.total_quantity} style={{display:'none'}}/>              
       </div>
       <div style={{...purchaseInputs, ...buttons}}>
         <span style={cancel} onClick={restoreFormAndOverlay}>Cancel</span>
@@ -65,19 +114,19 @@ export default function Form() {
       <div className='flex-Row-Wrap gap7px'
       style={{...purchaseInputs,  borderBottom: "1px solid rgb(180,180,180)",paddingBottom:"15px"}}>
         <span style={detail}>Date posted</span> 
-        <span style={detail2}>{demoData.created_date}</span>
-        <span style={detail}>product name</span> 
-        <span style={detail2}>{demoData.resource_name}</span> 
+        <span style={detail2}>{inputs?.created_at}</span>
+        <span style={detail}>Crop name</span> 
+        <span style={detail2}>{inputs?.crop_name}</span> 
         <span style={detail}>Available</span> 
-        <span style={detail2}>{demoData.quantity}</span>
-        <span style={detail}>Price</span> 
-        <span style={detail2}>{demoData.price}</span>
+        <span style={detail2}>{Number(inputs?.total_quantity)}</span>
+        <span style={detail}>Price per minimum sellable unit</span> 
+        <span style={detail2}>{Number(inputs?.price_per_minimum_sellable_quantity)}</span>
         <span style={detail}>Unit</span> 
-        <span style={detail2}>{demoData.unit}</span>
+        <span style={detail2}>{inputs?.unit}</span>
         <span style={detail}>Seller</span> 
-        <span style={detail2}>{demoData.seller}</span>
+        <span style={detail2}>{inputs?.fname+" "+inputs?.lname}</span>
         <span style={detail}>Location</span> 
-        <span style={detail2}>{demoData.location}</span>
+        <span style={detail2}>{inputs?.user_location}</span>
       </div>
     </form>
   )
@@ -112,7 +161,8 @@ const purchase={
 }
 const purchaseInputs={
   display:"flex",
-  gap:"10px"
+  gap:"10px",
+  flexWrap:'wrap'
 }
 const buttons={
   gap:"20px",

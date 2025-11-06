@@ -1,9 +1,11 @@
 import React, { createContext, useEffect, useState } from 'react'
+import LoadingSpinner from './components/LoadingSpinner';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export default function AuthProvider({children}) {
-  const [userData, setUserData] = useState({user_id:null,user_role:null});
+  const [userData, setUserData] = useState(undefined);
+  const [loading, setLoading] = useState(true);
 
   useEffect(()=>{
     async function fetchCookie(){
@@ -15,28 +17,33 @@ export default function AuthProvider({children}) {
 
           if(res.ok){
             const data = await res.json();
+            console.log('user_data '+userData);
             setUserData(data);
-            console.log("userData: "+JSON.stringify(userData));
-            console.log("data: "+JSON.stringify(data));
+            console.log(userData);
           }
           else{
             console.log('cannot fetch cookie');
           }
-
         }
         catch(e){
           console.log("Cookie fetch err: "+e);
         }
+        finally{
+        setLoading(false);
+      }
       };
       fetchCookie();
   },[]);
 
+  if(loading || userData === undefined){
+    return <LoadingSpinner/>
+  }
 
   return (
-    <AuthContext value={userData}>
-      {
-        userData?.user_id != null ? children : <></> 
+    <AuthContext.Provider value={{userData, setUserData}}>
+      { 
+        children
       }
-    </AuthContext>
+    </AuthContext.Provider>
   )
 }

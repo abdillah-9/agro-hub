@@ -12,7 +12,7 @@ export default function MiniMainApp() {
   const {showSideBar,activeMenu} = useContext(AppContext);
   
   let calcWidth ="";
-  showSideBar? calcWidth = "calc(100vw - 120px)" : calcWidth = "100vw";
+  showSideBar? calcWidth = "calc(100vw - 125px)" : calcWidth = "100vw";
   console.log("active menu inside minimainapp is "+activeMenu)
 
   return (

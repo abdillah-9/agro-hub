@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthProvider';
 
 export default function SignIn({setActiveLInk, activeLink}) {
   const navigate = useNavigate();
+  const [data, setData]= useState(false);
+  const {setUserData, userData} = useContext(AuthContext);
 
+  async function getUserCookie(){
+    try{
+      const getcookie = await fetch('http://localhost:4000/get_user_from_cookie',{
+        credentials:'include', method:"POST"
+      });
+
+      if(getcookie.ok){
+        const newUserData = await getcookie.json();
+        console.log("New cookie is "+JSON.stringify(newUserData));
+        setUserData(newUserData);
+      }
+    }
+    catch(e){
+      alert('Err catched is '+e);
+    }
+  }
   async function handleSubmit(e){
     e.preventDefault();
     //generate formData
@@ -24,6 +43,7 @@ export default function SignIn({setActiveLInk, activeLink}) {
     }
 
     try{
+
       const res = await fetch('http://localhost:4000/sign_in',{
         body: formData, 
         method: 'POST',
@@ -31,19 +51,25 @@ export default function SignIn({setActiveLInk, activeLink}) {
       });
 
       if(res.ok){
-        const data = await res.json();
-        console.log(data);
-        alert(data.message);
-        return navigate('/mainApp');
+        const obj = await res.json();
+        setData(obj);
+        console.log(obj);
+        alert(obj.message);
+        getUserCookie();
       }
       else{
         console.log('something happened');
       }
+      
     }
     catch(e){
-
+        console.log("login err "+e);
     }
   }
+  // if(data){
+  //   return navigate('/mainApp', {replace: true});
+  // }
+
   return (
     <div className='flex-Row-Grow-Wrap-Gap-Space_Between centered p25px blur'>
       

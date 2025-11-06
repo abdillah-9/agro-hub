@@ -1,26 +1,13 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../pages/MainApp';
 import { HiExclamationCircle, HiXCircle } from 'react-icons/hi2';
+import { HandleBuyCropsFormContext } from './BuyCropsPage';
 
 export default function MoreDetails() {
   const {resourceMoreDetails, setShowOverlay, setResourceMoreDetails} = useContext(AppContext);
+  const {more_details} = useContext(HandleBuyCropsFormContext);
+  const [data, setData] = useState(null);
   const calcHeight = resourceMoreDetails ? "100vh" : "0vh";
-
-  const demoData =
-      {
-          "id":1,
-          "photo":"",
-          "created_date":"12th Jun 2025",
-          "resource_name":"Handhoe",
-          "description":"",
-          "quantity":26,
-          "price":11000,
-          "unit":"tone",
-          "seller":"Jumbo Mwalutenge",
-          "location":"Singida",
-          "receipt":"",
-          "status":"onsale",
-      }
 
   const mainContainer={
       zIndex:3,
@@ -42,6 +29,8 @@ export default function MoreDetails() {
       gap:"15px",
   }
 
+  console.log("data IS : "+JSON.stringify(more_details));
+    
   function restoration(){
     setShowOverlay(false);
     setResourceMoreDetails(false);
@@ -52,35 +41,39 @@ export default function MoreDetails() {
       <div style={buttons}>
         <span style={cancel} onClick={restoration}><HiXCircle/></span>
       </div>
-      <img src='aaa' height={120} width={"100%"}/>
+      {/* <img src={'http::/localhost:4000/uploads/'} height={120} width={"100%"}/> */}
       <div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Date posted</span>
-          <span style={values}>{demoData.created_date}</span>
+          <span style={values}>{more_details?.created_at ? 
+            new Date(more_details?.created_at).toLocaleDateString('en-Us',{
+            weekday:'long', day:'numeric', month:'short', year:'numeric' }) :""}
+          </span>
         </div>
         <div className='flex-Row-Wrap'>
-          <span style={props}>Product name</span>
-          <span style={values}>{demoData.resource_name}</span>
+          <span style={props}>Crop name</span>
+          <span style={values}>{more_details?.crop_name}</span>
         </div>
-        <div className='flex-Row-Wrap'>
+        <div className='flex-Row-Wrap' style={more_details?.description ? {} : {display:'none'}}>
           <span style={props}>Description</span>
-          <span style={values}>{demoData.description || "N/A"}</span>
+          <span style={values}>{more_details?.description || "N/A"}</span>
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Quantity</span>
-          <span style={values}>{demoData.quantity}</span>
+          <span style={values}>{Number(more_details?.total_quantity || more_details?.ordered_crop_quantity||'')}</span>
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Price</span>
-          <span style={values}>{demoData.price}</span>
+          <span style={values}>{Number(more_details?.price_per_minimum_sellable_quantity ||
+          more_details?.paid_amount) || '' }</span>
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Unit</span>
-          <span style={values}>{demoData.unit}</span>
+          <span style={values}>{more_details?.unit}</span>
         </div>
         <div className='flex-Row-Wrap'>
           <span style={props}>Seller</span>
-          <span style={values}>{demoData.seller}</span>
+          <span style={values}>{more_details?.fname+" "+more_details?.lname}</span>
         </div>
       </div>
     </div>

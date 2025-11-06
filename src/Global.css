@@ -7,6 +7,29 @@
 html, body{
   overflow-x: hidden;
 }
+.loadingSpinner{
+  animation: spinner 0.7s linear infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding:12px;
+}
+@keyframes spinner{
+  0%{transform: rotate(1deg);}
+  100%{transform: rotate(360deg)}
+}
+.loadingHover{
+  animation: hover 1s linear infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding:12px;
+}
+@keyframes hover{
+  0%{opacity: 1;}
+  50%{opacity: 0;}
+  100%{opacity: 1;}
+}
 .flex-Row-Grow-Wrap-Gap-Space_Between{
   display: flex;
   gap: 20px;

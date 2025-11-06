@@ -1,12 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import background from '../../assets/african-man-harvesting-vegetables.jpg';
 import { LiaUserEditSolid } from 'react-icons/lia';
 import Form from './Form';
 import { AppContext } from '../../pages/MainApp';
 import ProfilePhoto from './ProfilePhoto';
+import { AuthContext } from '../../AuthProvider';
 
 export default function UserPage({calcWidth}) {
   const { setProfilePhoto, setEditProfile,setShowOverlay} = useContext(AppContext);
+  const { userData } = useContext(AuthContext);
+  const {
+    user_fname, user_lname, user_location, username_or_email, phone_number, user_photo, user_role
+  } = userData;
 
   const mainStyle={
     overflow:"auto", 
@@ -16,15 +21,6 @@ export default function UserPage({calcWidth}) {
     backgroundRepeat:"no-repeat",
   }
 
-  const demoData=[
-    {
-      fullName:"Feisal Juma",
-      emails:"feiboy007@gmail.com",
-      location:"Morogoro",
-      phone:"0718007568",
-    }
-  ];
-
   return (
     <div className='midWhiteBody flex-Column-Grow h80vh'>
       <div className='flex-Row-Grow-Wrap-Gap pureWhiteBody' 
@@ -32,41 +28,37 @@ export default function UserPage({calcWidth}) {
         <div className='paleBlackBody wFull hFull centered blur' style={{padding:"30px 0px"}}>
           <div style={card}>
             <div style={upper}>
-              <img src={background} width={100} height={100} alt='user photo' style={image} 
+              <img src={user_photo ? 'http://localhost:4000/uploads/'+user_photo : background} 
+              width={150} height={140} alt='user photo' style={image} 
               onClick={()=>{setProfilePhoto(true); setShowOverlay(true)}}/>
             </div>
             <div className='flex-Column-Gap p10px pureWhiteText p2'>
               {
-                demoData ? demoData.map((entry, index)=>(
-                  <section key={index}>
-                    <div style={editUserBody}>
-                      <button onClick={()=>{setEditProfile(true); setShowOverlay(true)}}
-                      className='flex-Row-Wrap p10px gap4px centered link' style={button}>
-                        <LiaUserEditSolid style={{fontSize:"22px"}}/>
-                        <span>Edit profile</span>
-                      </button>
-                    </div>
-                    <div className='flex-Row-Wrap-Gap centeredH p10px'>
-                      <span className='w100px'>fullName: </span>
-                      <span style={value}>{entry.fullName}</span>
-                    </div>
-                    <div className='flex-Row-Wrap-Gap centeredH p10px'>
-                      <span className='w100px'>Phone: </span>
-                      <span style={value}>{entry.phone}</span>
-                    </div>
-                    <div className='flex-Row-Wrap-Gap centeredH p10px'>
-                      <span className='w100px'>Location: </span>
-                      <span style={value}>{entry.location}</span>
-                    </div>
-                    <div className='flex-Row-Wrap-Gap centeredH p10px'>
-                      <span className='w100px'>Email: </span>
-                      <span style={value}>{entry.emails}</span>
-                    </div>
-                  </section>
-                )) :
-                  <div className='flex-Row-Wrap-Gap centeredH p10px'>
+                <section>
+                  <div style={editUserBody}>
+                    <button onClick={()=>{setEditProfile(true); setShowOverlay(true)}}
+                    className='flex-Row-Wrap p10px gap4px centered link' style={button}>
+                      <LiaUserEditSolid style={{fontSize:"22px"}}/>
+                      <span>Edit profile</span>
+                    </button>
                   </div>
-
+                  <div className='flex-Row-Wrap-Gap centeredH p10px'>
+                    <span className='w100px'>fullName: </span>
+                    <span style={{...value, minWidth:"200px", textAlign:'center'}}>{user_fname+" "+user_lname}</span>
+                  </div>
+                  <div className='flex-Row-Wrap-Gap centeredH p10px'>
+                    <span className='w100px'>Phone: </span>
+                    <span style={{...value, minWidth:"200px", textAlign:'center'}}>{phone_number}</span>
+                  </div>
+                  <div className='flex-Row-Wrap-Gap centeredH p10px'>
+                    <span className='w100px'>Location: </span>
+                    <span style={{...value, minWidth:"200px", textAlign:'center'}}>{user_location}</span>
+                  </div>
+                  <div className='flex-Row-Wrap-Gap centeredH p10px'>
+                    <span className='w100px'>Email: </span>
+                    <span style={{...value, minWidth:"200px", textAlign:'center'}}>{username_or_email}</span>
+                  </div>
+                </section>
               }
             </div>
           </div>
@@ -112,4 +104,5 @@ const value={
   padding:"10px",
   borderRadius:"20px",
   minWidth:"100px",
+  fontSize:'16px'
 }

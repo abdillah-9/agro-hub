@@ -1,10 +1,10 @@
 import React, { useContext} from 'react'
-import { AppContext } from '../pages/MainApp'
 import { SiTicktick } from 'react-icons/si';
 import { FaRegCircleXmark } from 'react-icons/fa6';
+import { AppContext } from '../../pages/MainApp';
 
-export default function DeleteCard() {
-  const {deleteCard, setDeleteCard, setShowOverlay} = useContext(AppContext);
+export default function DeleteCard({activateRefresh,setActivateRefresh, shownData}) {
+  const {deleteCard, setDeleteCard, setShowOverlay, rowToRemove} = useContext(AppContext);
 
   const deleteContainer={
     boxShadow:"1px 2px 25px rgb(10,10,10)",
@@ -27,6 +27,40 @@ export default function DeleteCard() {
   const button={
     border:"0px solid rgb(0,0,0)",
   }
+
+  async function removeSelectedRow(e){
+    e.preventDefault();
+    const formDataBody = new FormData();
+    formDataBody.append('row_id',rowToRemove.row_id);
+    formDataBody.append('shownData', shownData);
+
+    try{
+      const res = await fetch('http://localhost:4000/remove_crop_selected_row',
+        {
+          body:formDataBody, 
+          method: "POST"
+        }
+      );
+      if(res.ok){
+        console.log("Row is deleted successful");
+        const data = await res.json();
+        console.log(JSON.stringify(data));
+        setDeleteCard(false); 
+        setShowOverlay(false);
+        setActivateRefresh((prev)=>!prev); 
+        console.log("activate refresh inside deletecard "+activateRefresh);
+        alert(data.message);
+      }
+      else{
+        console.log("Something is broken");
+        alert(data.message);
+      }
+    }
+    catch(err){
+      alert("Catched err is "+err);
+    }
+
+  }
   return (
     <div>
       {
@@ -36,7 +70,7 @@ export default function DeleteCard() {
             <span style={{fontSize:"15px"}}>You can't undo this process</span>
           </div>
           <div className='flex-Row spaceBetween h3 gap10px'>
-            <button onClick={()=>{setDeleteCard(false); setShowOverlay(false)}} 
+            <button onClick={removeSelectedRow} 
               type='button' className='centered gap7px p1 p10px link' 
               style={{backgroundColor:"rgba(189, 54, 31, 0.36)",color:"darkred",...button}}> 
               <SiTicktick className='h4'/> Yes, Delete

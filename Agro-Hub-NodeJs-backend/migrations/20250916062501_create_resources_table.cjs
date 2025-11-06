@@ -6,6 +6,7 @@ exports.up = function(knex) {
     return knex.schema.createTable('resources', (table)=>{
         table.increments('id');
         table.string('resource_name',30).notNullable();
+        table.integer('seller_id').unsigned().references('id').inTable('users');
         table.string('unit',10).notNullable();
         table.string('minimum_sellable_quantity', 20).notNullable();
         table.decimal('total_quantity',10,2).notNullable();

@@ -1,57 +1,26 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BsCashStack } from 'react-icons/bs'
 import { CgMoreVerticalO} from 'react-icons/cg'
 import demoPhoto from "../../assets/g2i needs.png"
 import { PiImageBrokenThin } from 'react-icons/pi'
 import { AppContext } from '../../pages/MainApp'
+import { HandleBuyCropsFormContext } from './BuyCropsPage'
 
-export default function Table({shownData}) {
+export default function OnSalesTable({shownData, crops}) {
     const { setShowOverlay,setBuyResourceForm,setResourceMoreDetails, } = useContext(AppContext);
+    const {setMore_details} = useContext(HandleBuyCropsFormContext);
     const [viewPhoto, setViewPhoto] = useState(false);
-    const demoData = [
-        {
-            "id":1,
-            "photo":"",
-            "created_date":"12th Jun 2025",
-            "resource_name":"Handhoe",
-            "description":"",
-            "quantity":26,
-            "price":11000,
-            "unit":"tone",
-            "seller":"Jumbo Mwalutenge",
-            "location":"Singida",
-            "receipt":"",
-            "status":"onsale",
-        },
-        {
-            "id":2,
-            "photo":"12334.jpg",
-            "created_date":"12th Jun 2025",
-            "resource_name":"Handhoe",
-            "description":"",
-            "quantity":26,
-            "price":11000,
-            "unit":"bottle",
-            "seller":"Jumbo Mwalutenge",
-            "location":"Singida",
-            "receipt":"",
-            "status":"onsale",
-        },
-        {
-            "id":3,
-            "photo":"",
-            "created_date":"12th Jun 2025",
-            "resource_name":"Handhoe",
-            "description":"",
-            "quantity":26,
-            "price":11000,
-            "unit":"kg",
-            "seller":"Jumbo Mwalutenge",
-            "location":"Singida",
-            "receipt":"fgy.pdf",
-            "status":"purchased",
-        }
-    ]
+    const [crop_transaction, setCrop_transaction] = useState(null);
+
+    useEffect(()=>{
+        crops?.purchased_crops ? setCrop_transaction(crops?.purchased_crops) : 
+        setCrop_transaction(crops?.pending_crops);
+    },[crops]);
+
+    if(shownData == "onsale"){
+        return <div style={{display:"none"}}></div>
+    }
+
 return (
     <div style={{width:"100%",overflow:"auto"}}>
         <table style={tableContainer}>
@@ -60,11 +29,10 @@ return (
                     <th style={tCell}>NO</th>
                     <th style={tCell}>STATUS</th>
                     <th style={tCell}>PHOTO</th>
-                    <th style={tCell}>DATE POSTED</th>
-                    <th style={tCell}>PRODUCT NAME</th>
-                    <th style={tCell}>DESCRIPTION</th>
-                    <th style={tCell}>QUANTITY</th>
-                    <th style={tCell}>PRICE</th>
+                    <th style={tCell}>DATE PURCHASED</th>
+                    <th style={tCell}>CROP NAME</th>
+                    <th style={tCell}>QUANTITY PURCHASED</th>
+                    <th style={tCell}>TOTAL COST</th>
                     <th style={tCell}>UNIT</th>
                     <th style={tCell}>SELLER</th>
                     <th style={tCell}>LOCATION</th>
@@ -74,14 +42,13 @@ return (
            </thead>
            <tbody>
                 { 
-                    demoData && demoData.length > 0 ?
-                    demoData.map((entry, val)=>
-                    <tr key={val} style={ shownData == "all" || shownData == entry.status ?
-                     {} : {display:"none"}}>
-                        <td style={tCell}>{entry.id}</td>
+                    crop_transaction ?
+                    crop_transaction.map((entry, val)=>
+                    <tr key={val}>
+                        <td style={tCell}>{val+1}</td>
                         <td style={tCell}>
                             <span
-                            style={entry.status == "onsale" ? 
+                            style={entry.status == "pending" ? 
                             {...actionButton, backgroundColor:"rgba(196, 1, 99, 0.38)"} : 
                             {...actionButton, backgroundColor:"#ffd76a"}}>
                                 {entry.status}
@@ -89,34 +56,52 @@ return (
                         </td>
                         <td style={tCell} >
                         {
-                            entry.photo ? 
+                            entry?.crop_photo ? 
                             <div style={viewPhoto ? showPicSpace : {width:"100%",height:"100%"}} className='blur link'
                             onClick={()=>setViewPhoto(!viewPhoto)}>
-                                <img src={demoPhoto} width={"70px"} height={"50px"} 
+                                <img src={'http://localhost:4000/uploads/'+entry?.crop_photo} 
+                                width={"70px"} height={"50px"} 
                                 style={ viewPhoto ? showPic : {}}/>
                             </div> : 
                             <PiImageBrokenThin fontSize={35} />
                         }
                         </td>
-                        <td style={tCell}>{entry.created_date}</td>
-                        <td style={tCell}>{entry.resource_name}</td>
-                        <td style={tCell}>{entry.description == "" ? "N/A" : entry.description}</td>
-                        <td style={tCell}>{entry.quantity}</td>
-                        <td style={tCell}>{entry.price + " per "+entry.unit}</td>
+                        <td style={tCell}>{new Date(entry.created_at).toLocaleDateString('en-Us',{
+                            day:'2-digit', month:'short', weekday:'short', year:'numeric'
+                        })}</td>
+                        <td style={tCell}>{entry.crop_name}</td>
+                        <td style={tCell}>{Number(entry.ordered_crop_quantity)}</td>
+                        <td style={tCell}>{Number(entry.paid_amount)+"Tsh"}</td>
                         <td style={tCell}>{entry.unit}</td>
-                        <td style={tCell}>{entry.seller}</td>
-                        <td style={tCell}>{entry.location}</td>
-                        <td style={tCell}>{entry.receipt == "" ? "N/A" : entry.receipt}</td>
+                        <td style={tCell}>{entry.fname+" "+entry.lname}</td>
+                        <td style={tCell}>{entry.user_location}</td>
+                        <td style={tCell}>{entry.purchase_receipt == "" ? "N/A" : entry.purchase_receipt}</td>
                         <td style={tCellActions}>
-                            <div onClick={()=>{setShowOverlay(true); setResourceMoreDetails(true)}}  
+                            <div onClick={()=>{setShowOverlay(true); setResourceMoreDetails(true);
+                                setMore_details({
+                                    crop_name: entry.crop_name,
+                                    created_at: entry.created_at,
+                                    ordered_crop_quantity: entry.ordered_crop_quantity,
+                                    paid_amount: entry.paid_amount,
+                                    unit: entry.unit,
+                                    fname: entry.fname,
+                                    lname: entry.lname,
+                                    user_location: entry.user_location,
+                                    purchase_receipt: entry.purchase_receipt,
+                                    status: entry.status,
+                                });
+                            }}  
                                 className='link p2 flex-Row centered gap4px'
                                 style={{...actionButton, backgroundColor:"rgba(1, 196, 196, 0.45)"}}>
                                 <CgMoreVerticalO fontSize={14}/> <span>More</span>
                             </div>
                             <div onClick={()=>{setShowOverlay(true); setBuyResourceForm(true)}} 
-                                className='link flex-Row centered gap4px'
-                                style={entry.status == "purchased" ? {display:"none"}: {...actionButton}}>
-                                <BsCashStack fontSize={14}/> <span>Buy</span>
+                                className='flex-Row centered gap4px'
+                                style={entry.status != "onsale" ? 
+                                {display:"none"} : 
+                                {cursor:"pointer", ...actionButton,}}>
+                                <BsCashStack fontSize={14}/> 
+                                <span>Buy</span>
                             </div>
                         </td>
                     </tr>
