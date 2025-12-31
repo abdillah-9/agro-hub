@@ -1,18 +1,10 @@
 import React from 'react'
-import FarmerDashboard from './FarmerDashboard'
-import FarmerDashboard2 from '../../components/FarmerDashboard'
-import BuyerDashboard from '../../components/BuyerDashboard'
-// import SupplierDashboard from '../../components/SupplierDashboard'
-// import BuyerDashboard2 from '../../components/BuyerDashboard2'
+import ReusableDashboard from './ReusableDashboard'
 
-export default function DashboardPage() {
+export default function DashboardPage({calcWidth}) {
   return (
-    <div style={{width:"100%", height:"100%", backgroundColor:"rgb(240, 240, 240)"}}>
-       {/* <FarmerDashboard2/>
-      <BuyerDashboard/>
-      <BuyerDashboard2/>
-      <SupplierDashboard/>  */}
-      <FarmerDashboard/>
+    <div style={{width:calcWidth,height:"100%", backgroundColor:"rgb(240, 240, 240)"}}>
+      <ReusableDashboard/>
     </div>
   )
 }

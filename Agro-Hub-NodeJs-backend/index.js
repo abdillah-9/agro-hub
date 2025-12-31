@@ -47,8 +47,8 @@ app.use(cookieParser());
 
 const dbConfig = {
   host: "localhost",
-  user: "root",
-  password: "",
+  user: "phpmyadmin",
+  password: "Sabdillah@1999",
   database: "agrohub"
 };
 
@@ -278,7 +278,7 @@ app.post('/update_user_password', upload_image.single('user_photo'), async(req, 
   }
 });
 
-app.post('/update_profile_photo',upload_image.single('user_photo'), async (req, res)=>{
+app.post('/update_profile_photo',upload_image.single('profilePhoto'), async (req, res)=>{
   try{
     const user_photo = req?.file;
     const {user_id} = req?.body;
@@ -289,7 +289,7 @@ app.post('/update_profile_photo',upload_image.single('user_photo'), async (req, 
     }
 
     const updateQuery = " UPDATE users SET user_photo=? WHERE id=? ";
-    const dbConn = mysql.createConnection(dbConfig);
+    const dbConn = await mysql.createConnection(dbConfig);
     dbConn.execute(updateQuery, [req?.file?.filename, user_id]);
     return res.json({status: 200, message: 'photo uploaded successful'});
   }
@@ -307,7 +307,11 @@ app.post('/logout', async (req, res)=>{
       secure: false,
       maxAge: 1000*60*60*24*7,   
     });
-    return res.json({status: 200, message:"User was successfully logged out"});
+    return res.json({
+      status: 200, 
+      message:"User was successfully logged out",
+      photo_name_from_backend: req?.file?.filename
+    });
   }
   catch(e){
     console.log('catched err: '+e);
@@ -457,7 +461,7 @@ app.post('/get_crops_sales',upload_image.single('user_photo'), async (req , res)
       pending_length: pending_rows.length
     };
 
-    console.log("take lehgth "+sales_length.onsale_length);
+    console.log("take length "+sales_length.onsale_length);
 
     if(status =="onsale"){
       if(onsale_rows.length > 0){
@@ -917,6 +921,314 @@ app.post('/remove_resource_selected_row', upload_image.single('user_photo'), asy
     return res.json({status:500, message:"Catched error is "+err});
   }
 });
+
+// ************ Dashboard APIs ****************** //
+app.post('/get_dashboard_crops_sales', upload_image.single('user_photo'), async (req, res) => {
+  try {
+    const { user_id } = req.body;
+    console.log('user_id ' + user_id);
+
+    const DBConn = await mysql.createConnection(dbConfig);
+
+    // Query for onsale crops
+    const onsale_query = `
+      SELECT crops.*, users.user_fname, users.user_lname, users.user_location
+      FROM crops
+      JOIN users ON crops.seller_id = users.id
+      WHERE crops.deleted_at IS NULL AND seller_id = ?`;
+
+    // Query for pending orders
+    const pending_query = `
+      SELECT crops_orders.*, crops.crop_name, crops.crop_photo, crops.unit, crops.seller_id,
+             users.user_fname, users.user_lname, users.user_location
+      FROM crops_orders
+      JOIN crops ON crops_orders.ordered_crop_id = crops.id
+      JOIN users ON crops_orders.buyer_id = users.id
+      WHERE crops.seller_id = ? AND crops_orders.deleted_at IS NULL AND crops_orders.status = 'pending'`;
+
+    // Query for completed/purchased orders
+    const completed_query = `
+      SELECT crops_orders.*, crops.crop_name, crops.crop_photo, crops.unit, crops.seller_id,
+             users.user_fname, users.user_lname, users.user_location
+      FROM crops_orders
+      JOIN crops ON crops_orders.ordered_crop_id = crops.id
+      JOIN users ON crops.seller_id = users.id
+      WHERE crops.seller_id = ? AND crops_orders.deleted_at IS NULL AND crops_orders.status = 'purchased'`;
+
+    // Placeholder query for shipped (currently returns empty array)
+    const shipped_query = `
+      SELECT crops_orders.*, crops.crop_name, crops.crop_photo, crops.unit, crops.seller_id,
+             users.user_fname, users.user_lname, users.user_location
+      FROM crops_orders
+      JOIN crops ON crops_orders.ordered_crop_id = crops.id
+      JOIN users ON crops.seller_id = users.id
+      WHERE crops.seller_id = ? AND crops_orders.deleted_at IS NULL AND crops_orders.status = 'shipped'`;
+
+    // Execute all queries
+    const [onsale_rows] = await DBConn.execute(onsale_query, [user_id]);
+    const [pending_rows] = await DBConn.execute(pending_query, [user_id]);
+    const [completed_rows] = await DBConn.execute(completed_query, [user_id]);
+    const [shipped_rows] = await DBConn.execute(shipped_query, [user_id]);
+
+    DBConn.end();
+
+    // Prepare response
+    const sales_length = {
+      onsale_length: onsale_rows.length,
+      pending_length: pending_rows.length,
+      completed_length: completed_rows.length,
+      shipped_length: shipped_rows.length
+    };
+
+    return res.json({
+      status: 200,
+      message: 'Data fetched successfully',
+      onsale_crops: onsale_rows,
+      pending_crops: pending_rows,
+      completed_crops: completed_rows,
+      shipped_crops: shipped_rows,
+      sales_length
+    });
+
+  } catch (e) {
+    console.log("Error fetching crops: ", e);
+    return res.status(500).json({ status: 500, message: 'Internal server error' });
+  }
+});
+
+app.post('/get_dashboard_crops_purchases', upload_image.single('user_photo'), async (req, res) => {
+  try {
+    const { user_id } = req.body;
+
+    const DBConn = await mysql.createConnection(dbConfig);
+
+    const base_query = `SELECT crops_orders.*, 
+                          crops.crop_name, crops.unit, crops.crop_photo,
+                          users.user_fname, users.user_lname, users.user_location
+                        FROM crops_orders
+                        JOIN crops ON crops_orders.ordered_crop_id = crops.id
+                        JOIN users ON crops.seller_id = users.id
+                        WHERE crops_orders.buyer_id = ? 
+                          AND crops_orders.deleted_at IS NULL 
+                          AND crops_orders.status = ?`;
+
+    const onsale_query = `SELECT crops.*,
+                          users.user_fname, users.user_lname, users.user_location
+                        FROM crops
+                        JOIN users ON crops.seller_id = users.id
+                        WHERE crops.deleted_at IS NULL AND seller_id != ?`;
+
+    // fetch all statuses at once  
+    const [onsale_rows]    = await DBConn.execute(onsale_query, [user_id]);
+    const [pending_rows]   = await DBConn.execute(base_query, [user_id, 'pending']);
+    const [shipped_rows]   = await DBConn.execute(base_query, [user_id, 'shipped']);
+    const [completed_rows] = await DBConn.execute(base_query, [user_id, 'completed']);
+    const [purchased_rows] = await DBConn.execute(base_query, [user_id, 'purchased']);
+
+    DBConn.end();
+
+    // count object
+    const sales_length = {
+      onsale_length: onsale_rows.length,
+      pending_length: pending_rows.length,
+      shipped_length: shipped_rows.length,
+      completed_length: completed_rows.length,
+      purchased_length: purchased_rows.length
+    };
+
+    return res.json({
+      status: 200,
+      message: "Data fetched successfully",
+      onsale_crops: onsale_rows,
+      pending_crops: pending_rows,
+      shipped_crops: shipped_rows,
+      completed_crops: completed_rows,
+      purchased_crops: purchased_rows,
+      sales_length
+    });
+
+  } catch (e) {
+    console.log("err during fetching crops " + e);
+    return res.json({ status: 500, message: "Internal server error" });
+  }
+});
+
+app.post('/get_dashboard_resources_sales', upload_image.single('resource_photo'), async(req, res) => {
+
+  try {
+    const { status, user_id } = req.body;
+
+    // -----------------------------
+    // 1. Helper for ON-SALE TOTAL
+    // -----------------------------
+    const calculateOnsaleTotal = (items) => {
+      let total = 0;
+      items.forEach(item => {
+        const qty = Number(item.total_quantity);
+        const minQty = Number(item.minimum_sellable_quantity);
+        const price = Number(item.price_per_minimum_sellable_quantity);
+
+        if (!isNaN(qty) && !isNaN(minQty) && !isNaN(price) && minQty > 0) {
+          total += (qty / minQty) * price;
+        }
+      });
+      return total;
+    };
+
+    // -----------------------------
+    // 2. Helper for ORDERS TOTAL
+    // -----------------------------
+    const calculateOrdersTotal = (items) => {
+      return items.reduce((sum, item) => {
+        const paid = Number(item.paid_amount);
+        return !isNaN(paid) ? sum + paid : sum;
+      }, 0);
+    };
+
+    // -----------------------------
+    // 3. Queries
+    // -----------------------------
+    const onsale_query = `
+      SELECT resources.*,
+             users.user_fname, users.user_lname, users.user_location
+      FROM resources
+      JOIN users ON resources.seller_id = users.id
+      WHERE resources.deleted_at IS NULL 
+        AND resources.seller_id = ?
+    `;
+
+    const orders_query = `
+      SELECT resources_orders.*,
+             resources.resource_name, resources.resource_photo, 
+             resources.unit, resources.seller_id,
+             users.user_fname, users.user_lname, users.user_location
+      FROM resources_orders
+      JOIN resources ON resources_orders.ordered_resource_id = resources.id
+      JOIN users ON resources.seller_id = users.id
+      WHERE resources.seller_id = ? 
+        AND resources_orders.deleted_at IS NULL
+        AND resources_orders.status = ?
+    `;
+
+    const mysqlConn = await mysql.createConnection(dbConfig);
+
+    // INSTOCK
+    const [onsale_row] = await mysqlConn.execute(onsale_query, [user_id]);
+
+    // STATUS GROUPS
+    const [pending_row]   = await mysqlConn.execute(orders_query, [user_id, "pending"]);
+    const [shipped_row]   = await mysqlConn.execute(orders_query, [user_id, "shipped"]);
+    const [completed_row] = await mysqlConn.execute(orders_query, [user_id, "completed"]);
+
+    mysqlConn.end();
+
+    // -----------------------------
+    // 4. Compute Totals
+    // -----------------------------
+    const stats = {
+      instock: {
+        items: onsale_row.length,
+        total: calculateOnsaleTotal(onsale_row)
+      },
+      pending: {
+        items: pending_row.length,
+        total: calculateOrdersTotal(pending_row)
+      },
+      shipped: {
+        items: shipped_row.length,
+        total: calculateOrdersTotal(shipped_row)
+      },
+      completed: {
+        items: completed_row.length,
+        total: calculateOrdersTotal(completed_row)
+      }
+    };
+
+    // Final Response
+    return res.json({
+      status: 200,
+      message: "Resources dashboard stats fetched successfully",
+      stats,
+      requested_resources:
+        status === "pending" ? pending_row :
+        status === "shipped" ? shipped_row :
+        status === "completed" ? completed_row :
+        onsale_row
+    });
+
+  } catch (error) {
+    console.log("Dashboard resources error:", error);
+    return res.json({ status: 500, message: "Server error" });
+  }
+
+});
+
+app.post('/get_dashboard_resources_purchases', upload_image.single('resource_page'), async (req, res) => {
+    try {
+        const { user_id, status } = req.body;
+
+        // Helper: calculate total paid_amount
+        const calculateTotal = (items) => {
+            return items.reduce((sum, item) => {
+                const paid = Number(item.paid_amount);
+                return !isNaN(paid) ? sum + paid : sum;
+            }, 0);
+        };
+
+        // Query template for purchases
+        const orders_query = `
+            SELECT resources_orders.*,
+                   resources.resource_name, resources.unit, resources.resource_photo,
+                   users.user_fname, users.user_lname, users.user_location
+            FROM resources_orders
+            JOIN resources ON resources_orders.ordered_resource_id = resources.id
+            JOIN users ON resources.seller_id = users.id
+            WHERE resources_orders.buyer_id = ?
+              AND resources_orders.deleted_at IS NULL
+              AND resources_orders.status = ?
+        `;
+
+        const conn = await mysql.createConnection(dbConfig);
+
+        const [pending_rows]   = await conn.execute(orders_query, [user_id, "pending"]);
+        const [shipped_rows]   = await conn.execute(orders_query, [user_id, "shipped"]);
+        const [completed_rows] = await conn.execute(orders_query, [user_id, "completed"]);
+
+        conn.end();
+
+        // Prepare stats **ONLY for purchases**
+        const stats = {
+            pending: {
+                items: pending_rows.length,
+                total: calculateTotal(pending_rows)
+            },
+            shipped: {
+                items: shipped_rows.length,
+                total: calculateTotal(shipped_rows)
+            },
+            completed: {
+                items: completed_rows.length,
+                total: calculateTotal(completed_rows)
+            }
+        };
+
+        return res.json({
+            status: 200,
+            message: "Purchase dashboard fetched",
+            stats,
+            resources:
+                status === "pending"   ? pending_rows :
+                status === "shipped"   ? shipped_rows :
+                status === "completed" ? completed_rows :
+                pending_rows  // default fallback
+        });
+
+    } catch (err) {
+        console.log("Purchases dashboard error:", err);
+        res.json({ status: 500, message: "Server error" });
+    }
+});
+
 
 const PORT = 4000;
 app.listen(PORT, () => {

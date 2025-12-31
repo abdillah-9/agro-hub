@@ -42,7 +42,49 @@ export default function App() {
               />
 
               {/* Protected routes */}
-              <Route path={"/mainApp"} 
+              <Route path={"/mainApp/dashboard"} 
+                     element={
+                      <ProtectedRoute role={['farmer','seller']}>
+                        <MainApp/>
+                      </ProtectedRoute>
+                     }
+              />
+              <Route path={"/mainApp/user"} 
+                     element={
+                      <ProtectedRoute role={['farmer','seller']}>
+                        <MainApp/>
+                      </ProtectedRoute>
+                     }
+              />
+              <Route path={"/mainApp/settings"} 
+                     element={
+                      <ProtectedRoute role={['farmer','seller']}>
+                        <MainApp/>
+                      </ProtectedRoute>
+                     }
+              />
+              <Route path={"/mainApp/buy_resources"} 
+                     element={
+                      <ProtectedRoute role={['farmer','seller']}>
+                        <MainApp/>
+                      </ProtectedRoute>
+                     }
+              />
+              <Route path={"/mainApp/buy_crops"} 
+                     element={
+                      <ProtectedRoute role={['farmer','seller']}>
+                        <MainApp/>
+                      </ProtectedRoute>
+                     }
+              />
+              <Route path={"/mainApp/sell_resources"} 
+                     element={
+                      <ProtectedRoute role={['farmer','seller']}>
+                        <MainApp/>
+                      </ProtectedRoute>
+                     }
+              />
+              <Route path={"/mainApp/sell_crops"} 
                      element={
                       <ProtectedRoute role={['farmer','seller']}>
                         <MainApp/>
@@ -78,7 +120,7 @@ export function ProtectedRoute({children, role}){
   console.log("value of user_role is "+user_role);
   const path = location.pathname; 
   if(path == '/'  || path == '/signIn' || path == 'signUp'){
-    return <Navigate to='/mainApp' replace/>
+    return <Navigate to='/mainApp/dashboard' replace/>
   }
 
   if(role.includes(user_role)){
@@ -101,7 +143,7 @@ export function PublicRoute({children}){
 
   if(user_id){
     return(
-      <Navigate to={'/mainApp'} replace />  
+      <Navigate to={'/mainApp/dashboard'} replace />  
     );
   }
   else if(!user_id){

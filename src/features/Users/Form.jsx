@@ -6,7 +6,7 @@ import { AuthContext } from '../../AuthProvider';
 
 export default function Form() {
   const {editProfile, setEditProfile, setShowOverlay} = useContext(AppContext);
-  const { userData } = useContext(AuthContext);
+  const { userData, refetchAuthContext, setRefetchAuthContext } = useContext(AuthContext);
   const {
     user_id, user_fname, user_lname, username_or_email, phone_number,
     user_photo, user_location, user_password
@@ -40,7 +40,6 @@ export default function Form() {
   }
 
   function restoration(e){
-    e.preventDefault();
     setEditProfile(false);
     setShowOverlay(false);
     setFile_name(null);
@@ -79,6 +78,7 @@ export default function Form() {
         console.log("data is "+JSON.stringify(data));
         restoration();
         alert(data.message);
+        setRefetchAuthContext(!refetchAuthContext);
       }
     
     }
@@ -108,6 +108,7 @@ export default function Form() {
         const data = await res.json();
         console.log("data is "+console.log(data));
         alert(data.message);
+        setRefetchAuthContext(!refetchAuthContext);
       }
     
     }

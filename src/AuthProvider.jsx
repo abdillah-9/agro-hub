@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 export default function AuthProvider({children}) {
   const [userData, setUserData] = useState(undefined);
   const [loading, setLoading] = useState(true);
+  const [refetchAuthContext, setRefetchAuthContext] = useState(false);
 
   useEffect(()=>{
     async function fetchCookie(){
@@ -33,14 +34,14 @@ export default function AuthProvider({children}) {
       }
       };
       fetchCookie();
-  },[]);
+  },[refetchAuthContext]);
 
   if(loading || userData === undefined){
     return <LoadingSpinner/>
   }
 
   return (
-    <AuthContext.Provider value={{userData, setUserData}}>
+    <AuthContext.Provider value={{userData, setUserData, refetchAuthContext, setRefetchAuthContext}}>
       { 
         children
       }

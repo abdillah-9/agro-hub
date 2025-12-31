@@ -9,8 +9,8 @@ module.exports = {
     client: 'mysql2',
     connection: {
       host: 'localhost',
-      user: 'root',
-      password: '',
+      user: 'phpmyadmin',
+      password: 'Sabdillah@1999',
       database: 'agrohub'
     },
     migrations: {
@@ -22,8 +22,8 @@ module.exports = {
     client: 'mysql2',
     connection: {
       host: 'localhost',
-      user: 'root',
-      password: '',
+      user: 'phpmyadmin',
+      password: 'Sabdillah@1999',
       database: 'agrohub'
     },
     pool: {
@@ -40,8 +40,8 @@ module.exports = {
     client: 'mysql2',
     connection: {
       host: 'localhost',
-      user: 'root',
-      password: '',
+      user: 'phpmyadmin',
+      password: 'Sabdillah@1999',
       database: 'agrohub'
     },
     pool: {

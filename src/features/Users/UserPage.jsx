@@ -88,6 +88,7 @@ const image={
   borderRadius:"50%",
   border:"1px solid white",
   cursor:"pointer",
+  boxShadow:'1px 1px 30px black'
 }
 const editUserBody={
   display:"flex",

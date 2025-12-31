@@ -7,7 +7,7 @@ import { AuthContext } from '../../AuthProvider';
 
 export default function ProfilePhoto() {
   const {profilePhoto, setProfilePhoto, setShowOverlay} = useContext(AppContext);
-  const {userData} = useContext(AuthContext);
+  const {userData, setUserData, refetchAuthContext, setRefetchAuthContext} = useContext(AuthContext);
   const {user_id} = userData;
   const [uploadedPhoto, setUploadedPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ export default function ProfilePhoto() {
     e.preventDefault();
 
     //generate formData
-    const photoFormData = new FormData();
+    const photoFormData = new FormData(e.target);
     photoFormData.append('user_id', user_id);
 
     //validate file_input
@@ -63,9 +63,10 @@ export default function ProfilePhoto() {
       });
       if(res.ok){
         const data = await res.json();
-        console.log("api res is "+data.status);
+        console.log("api res is "+data.status);      
         restoration();
         alert(data.message);
+        setRefetchAuthContext(!refetchAuthContext);
       }
       else{
         alert("server failed to return response ...");
