@@ -21,8 +21,7 @@ export default function CropSalesStats(){
             });
 
             if(res.ok){
-                const farmer_data = await res.text();
-                alert(farmer_data)
+                const farmer_data = await res.json();
                 console.log("farmer_data is "+JSON.stringify(farmer_data));
                 setFarmerData(farmer_data)
             }

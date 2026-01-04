@@ -982,7 +982,7 @@ app.post('/get_dashboard_crops_sales', upload_image.single('user_photo'), async 
 
     return res.json({
       status: 200,
-      message: 'Data fetched successfully',
+      message: 'get_dashboard_crops_sales successfully',
       onsale_crops: onsale_rows,
       pending_crops: pending_rows,
       completed_crops: completed_rows,
@@ -1229,6 +1229,100 @@ app.post('/get_dashboard_resources_purchases', upload_image.single('resource_pag
     }
 });
 
+app.post('/get_recent_interactions', upload_image.single('none'), async (req, res) => {
+  try {
+    const { user_id, limit } = req.body;
+
+    if (!user_id) {
+      return res.status(400).json({
+        status: 400,
+        message: "user_id is required"
+      });
+    }
+
+    const safeUserId = Number(user_id);
+    const safeLimit = Number(limit) || 10;
+
+    const conn = await mysql.createConnection(dbConfig);
+
+    const query = `
+      SELECT 
+        u.id,
+        u.user_fname,
+        u.user_lname,
+        u.username_or_email,
+        u.phone_number,
+        u.user_role,
+        u.user_location,
+        u.user_photo,
+        MAX(t.interaction_time) AS last_interaction
+      FROM (
+        -- CROPS ORDERS
+        SELECT 
+          CASE 
+            WHEN co.buyer_id = ? THEN c.seller_id
+            ELSE co.buyer_id
+          END AS other_user_id,
+          co.created_at AS interaction_time
+        FROM crops_orders co
+        JOIN crops c ON co.ordered_crop_id = c.id
+        WHERE co.buyer_id = ? OR c.seller_id = ?
+
+        UNION ALL
+
+        -- RESOURCES ORDERS
+        SELECT 
+          CASE 
+            WHEN ro.buyer_id = ? THEN r.seller_id
+            ELSE ro.buyer_id
+          END AS other_user_id,
+          ro.created_at AS interaction_time
+        FROM resources_orders ro
+        JOIN resources r ON ro.ordered_resource_id = r.id
+        WHERE ro.buyer_id = ? OR r.seller_id = ?
+      ) t
+      JOIN users u ON u.id = t.other_user_id
+      WHERE u.id != ?
+      GROUP BY u.id
+      ORDER BY last_interaction DESC
+      LIMIT ${safeLimit}
+    `;
+
+    const [rows] = await conn.execute(query, [
+      safeUserId,
+      safeUserId,
+      safeUserId,
+      safeUserId,
+      safeUserId,
+      safeUserId,
+      safeUserId
+    ]);
+
+    conn.end();
+
+    return res.status(200).json({
+      status: 200,
+      message: "Recent interactions fetched",
+      interactions: rows.map(u => ({
+        id: u.id,
+        name: `${u.user_fname} ${u.user_lname}`,
+        email: u.username_or_email,
+        phone: u.phone_number,
+        role: u.user_role,
+        location: u.user_location,
+        photo: u.user_photo,
+        last_interaction: u.last_interaction
+      }))
+    });
+
+  } catch (err) {
+    console.error("Recent interactions error:", err);
+    return res.status(500).json({
+      status: 500,
+      message: err.message
+    });
+  }
+});
 
 const PORT = 4000;
 app.listen(PORT, () => {

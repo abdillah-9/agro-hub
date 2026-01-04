@@ -46,7 +46,7 @@ export default function CropPurchasesStats(){
     const completed_total_cost = completedCrops.reduce((acc, c) => acc + (parseFloat(c.paid_amount) || 0), 0);
 
     return(
-        <div style={{display:'flex', gap:'15px'}}>
+        <div style={{display:'flex', flexWrap:'wrap', gap:'15px', marginTop:'50px'}}>
 
             {/** RESOURCES PENDING */}
             <div className='flex-Column gap10px bRad5 p10px p1 midBlackText pureWhiteBody'
@@ -87,7 +87,7 @@ export default function CropPurchasesStats(){
                     <FaSackDollar style={{fontSize:"18px", color:"rgba(0, 73, 70, 0.96)"}}/>
                 </div>
 
-                <span style={{color:"rgba(1, 133, 128, 0.62)"}}>Pending crops purchases</span>
+                <span style={{color:"rgba(1, 133, 128, 0.62)"}}>Completed crops purchases</span>
                 <span style={{fontSize:"20px"}}>
                     <span style={{fontSize:"13px"}}>Items</span> {completed_items}
                 </span>

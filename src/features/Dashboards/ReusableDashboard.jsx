@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { IoAddCircleOutline} from 'react-icons/io5'
 import { LiaUserEditSolid } from 'react-icons/lia'
 import { PiFlowerTulipFill, PiHandHeartThin, PiMailboxThin, PiMoneyWavyLight, PiPhoneCallThin, PiSprayBottle, PiSprayBottleFill, PiTimerThin } from 'react-icons/pi'
@@ -25,7 +25,9 @@ import ResourcePurchasesStats from './ResourcePurchasesStats';
 
 export default function ReusableDashboard() {
     const {userData} = useContext(AuthContext);
+    const [favourateBuyers, setFavourateBuyers] = useState([]);
     //alert(userData.user_role);
+    
     
     const [like, setLike] = useState(true);
     //set navigation
@@ -46,29 +48,23 @@ const cropDistributionData = [
 ];
 
 const COLORS = ['#2a7f62', '#f3bf4f', '#e76f51', '#264653'];
-    const favourateBuyers=[
-        {
-            name: "juma Isaya",
-            phone:"0678 908 763",
-            location:"Kigoma",
-            emails:"asdikey231@gmail.com",
-            role:"farmer",
-        },
-        {
-            name: "Hassan Kibao",
-            phone:"0775 789 080",
-            location:"Morogoro",
-            emails:"asdikey231@gmail.com",
-            role:"supplier",
-        },
-        {
-            name: "juma Isaya",
-            phone:"0678 908 763",
-            location:"Kigoma",
-            emails:"asdikey231@gmail.com",
-            role:"seller",
-        },
-    ];
+    useEffect(() => {
+        const fData = new FormData();
+        fData.append('user_id',userData.id);
+        fetch("http://localhost:4000/get_recent_interactions", {
+            method: "POST",
+            credentials: "include",
+            body: fData
+        })
+            .then(res => res.json())
+            .then(data => {
+                 console.log("recent interactions response:", data);
+            if (data.status === 200) {
+                setFavourateBuyers(data.interactions);
+            }
+        });
+    }, [userData]);
+
   return (
     <div style={{overflow:"auto", height:"100%", padding:"15px 15px 0px 15px", gap:'25px',}}
          className='flex-Column'
@@ -128,127 +124,91 @@ const COLORS = ['#2a7f62', '#f3bf4f', '#e76f51', '#264653'];
             <ResourcePurchasesStats />
         </div>
 
-        {/** GRAPHS */}
-        {/* <div className='flex-Row-Wrap gap10px' style={{ justifyContent:"space-between"}}>
-            <div className='flex-Column-Grow gap10px p3 pureWhiteBody bRad5' 
-            style={{width:"45%",minWidth:"200px",padding:"10px 10px 0px 0px",boxShadow:"1px 2px 7px black",}}>
-                <div onClick={()=>{navigateTo('/mainApp/user');}} className='p1 centered'>Crops sales</div>
-                <ResponsiveContainer width="100%" height={250} className={""}>
-                    <LineChart data={cropSalesData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="sales" stroke="#2a7f62" strokeWidth={2} />
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
-            <div className='flex-Column-Grow gap10px p3 pureWhiteBody bRad5' 
-            style={{width:"45%",minWidth:"200px",padding:"10px 10px 0px 0px",boxShadow:"1px 2px 7px black"}}>
-                <div onClick={()=>{navigateTo('/mainApp/user');}} className='p1 centered'>Crops categories</div>
-                <ResponsiveContainer width="100%" height={250}>
-                    <PieChart>
-                    <Pie data={cropDistributionData} dataKey="value" 
-                    nameKey="name" cx="50%" cy="50%" outerRadius={70} innerRadius={13}>
-                        {cropDistributionData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                    </PieChart>
-                </ResponsiveContainer>
-            </div>           
-        </div> */}
-
-        {/* Graphs */}
-
-        {/** FAVOURATES AND RECENT INTERACTIONS */}
+        {/** RECENT INTERACTIONS */}
         <div style={favourates_interactions} >
-            <div className='flex-Row centeredH gap4px midGreenBody' style={{padding:'15px 15px 0px 15px'}}>
-                <div style={{padding:'10px 12px', borderRadius:'5px', background:'linear-gradient(45deg, #a57100ff,  #f84600ff)', color:'rgb(255, 255, 255)',display:'flex',}}>
-                    <PiHandHeartThin fontSize={19}/>
-                </div>
-                <span style={{fontWeight:400, fontSize:'16px', color:'white'}}>Favourates</span>
-            </div>        
-            <div className='gap10px flex-Row-Gap midBlackText midGreenBody p2' style={{padding:'20px 15px 70px 15px', flexWrap:'wrap', gap:'15px'}}>
-            {
-                favourateBuyers ? favourateBuyers.map((entry, index)=>(
-                    <div className='flex-Row-Wrap-Gap bRad5 p10px centeredH pureWhiteBody' key={index}
-                        style={{boxShadow:"1px 2px 17px black", gap:'30px', flex:'1 1 250px', justifyContent:'center', textAlign:'center'}}>
-                        <div style={{width:'100%', display:'flex', justifyContent:'center',position:'relative'}}>
-                            <img src={background2} style={{...imageStyle, aspectRatio:1/0.9, borderRadius:'50%', boxShadow:'1px 2px 12px #4e4d4d86'}} width={'150px'} height={'auto'} alt='pic'/>  
-                            
-                            {/** STAR */}
-                            <div onClick={()=>{setLike(!like)}} style={{fontSize:'30px', color:'#f3bf4f', width:'fit-content', cursor:'pointer', position:'absolute', right:'5%'}}>
-                            {
-                                like ? <GoStarFill /> : <GoStar />
-                            }
-                        </div>                      
-                        </div>    
-                        <div style={{display:'flex', flexDirection:'column', gap:'5px'}}>
-                            <span style={{fontSize:'18px', fontWeight:600}}>{entry.name}</span>
-                            <span style={{fontSize:'14px'}}>{entry.role} found at {entry.location}</span>
-                        </div>
-                        <div style={{display:'flex', flexWrap:'wrap',gap:'15px', width:'100%'}}>
-                            <div style={{display:'flex', gap:'7px', alignItems:'center', background: 'linear-gradient(45deg, rgba(6, 116, 6, 0.77), rgba(2, 185, 2, 0.73))', padding:'10px', borderRadius:'25px', width:'45%',flex:'1 1 150px', justifyContent:'center', color:'white'}}>
-                                <PiPhoneCallThin style={{fontSize:'18px'}} />
-                                <span style={{fontSize:'14px', fontWeight:300}}>Call</span>
-                            </div>
-                            <div style={{display:'flex', gap:'7px', alignItems:'center', background: 'linear-gradient(45deg, rgba(6, 116, 116, 0.77), rgba(144, 1, 180, 0.73))', padding:'10px', borderRadius:'25px', width:'45%',flex:'1 1 150px', justifyContent:'center', color:'white'}}>
-                                <CiMail style={{fontSize:'18px'}} />
-                                <span style={{fontSize:'14px', fontWeight:300}}>Mail</span>
-                            </div>
-                        </div>
-                    </div>
-                )) :
-                <div></div>
-            }
-            </div>
-
-            <div className='flex-Row centeredH gap4px midGreenBody' style={{padding:'0px 15px 0px 15px'}}>
+            <div className='flex-Row centeredH gap4px midGreenBody' style={{padding:'15px 15px 15px 15px'}}>
                 <div style={{padding:'8px 10px', borderRadius:'5px', background:'linear-gradient(45deg, #a5710077,  #e95e02ff)', color:'white',display:'flex',}}>
                     <PiTimerThin fontSize={22}/>
                 </div>
                 <span  style={{fontWeight:400, fontSize:'15px', color:'#ffffffff'}}>Recent interactions</span>
-            </div>       
-            <div className='gap10px flex-Row-Gap midBlackText midGreenBody p2' style={{padding:'20px 15px 70px 15px', flexWrap:'wrap', gap:'15px'}}>
-            {
-                favourateBuyers ? favourateBuyers.map((entry, index)=>(
-                    <div className='flex-Row-Wrap-Gap bRad5 p10px centeredH pureWhiteBody' key={index}
-                        style={{boxShadow:"1px 2px 17px black", gap:'30px', flex:'1 1 250px', justifyContent:'center', textAlign:'center'}}>
-                        <div style={{width:'100%', display:'flex', justifyContent:'center',position:'relative'}}>
-                            <img src={background2} style={{...imageStyle, aspectRatio:1/0.9, borderRadius:'50%', boxShadow:'1px 2px 12px #4e4d4d86'}} width={'150px'} height={'auto'} alt='pic'/>  
-                            
-                            {/** STAR */}
-                            <div onClick={()=>{setLike(!like)}} style={{fontSize:'30px', color:'#f3bf4f', width:'fit-content', cursor:'pointer', position:'absolute', right:'5%'}}>
-                            {
-                                like ? <GoStar /> : <GoStarFill />
-                            }
-                        </div>                      
-                        </div>    
-                        <div style={{display:'flex', flexDirection:'column', gap:'5px'}}>
-                            <span style={{fontSize:'18px', fontWeight:600}}>{entry.name}</span>
-                            <span style={{fontSize:'14px'}}>{entry.role} found at {entry.location}</span>
-                        </div>
-                        <div style={{display:'flex', flexWrap:'wrap',gap:'15px', width:'100%'}}>
-                            <div style={{display:'flex', gap:'7px', alignItems:'center', background: 'linear-gradient(45deg, rgba(6, 116, 6, 0.77), rgba(2, 185, 2, 0.73))', padding:'10px', borderRadius:'25px', width:'45%',flex:'1 1 150px', justifyContent:'center', color:'white'}}>
-                                <PiPhoneCallThin style={{fontSize:'18px'}} />
-                                <span style={{fontSize:'14px', fontWeight:300}}>Call</span>
-                            </div>
-                            <div style={{display:'flex', gap:'7px', alignItems:'center', background: 'linear-gradient(45deg, rgba(6, 116, 116, 0.77), rgba(144, 1, 180, 0.73))', padding:'10px', borderRadius:'25px', width:'45%',flex:'1 1 150px', justifyContent:'center', color:'white'}}>
-                                <CiMail style={{fontSize:'18px'}} />
-                                <span style={{fontSize:'14px', fontWeight:300}}>Mail</span>
-                            </div>
-                        </div>
-                    </div>
-                )) :
-                <div></div>
-            }
             </div>
+
+            {/**FAVOURITES */}   
+            <Favourites favourateBuyers={favourateBuyers} like={like} setLike={setLike}/>    
+
         </div>     
     </div>
   )
+}
+
+function Favourites({favourateBuyers, like, setLike}){
+  return(
+            <div className='gap10px flex-Row-Gap midBlackText midGreenBody p2' style={{padding:'20px 15px 70px 15px', flexWrap:'wrap', gap:'15px'}}>
+    {
+        favourateBuyers ? favourateBuyers.map((entry, index)=>(
+            <div className='flex-Row-Wrap-Gap bRad5 p10px centeredH pureWhiteBody' key={index}
+                style={{boxShadow:"1px 2px 17px black", gap:'30px', flex:'1 1 250px', justifyContent:'center', textAlign:'center'}}>
+                <div style={{width:'100%', display:'flex', justifyContent:'center',position:'relative'}}>
+                    <img src={background2} style={{...imageStyle, aspectRatio:1/0.9, borderRadius:'50%', boxShadow:'1px 2px 12px #4e4d4d86'}} width={'150px'} height={'auto'} alt='pic'/>  
+                    
+                    {/** STAR */}
+                    <div onClick={()=>{setLike(!like)}} style={{fontSize:'30px', color:'#f3bf4f', width:'fit-content', cursor:'pointer', position:'absolute', right:'5%'}}>
+                    {
+                        like ? <GoStar /> : <GoStarFill />
+                    }
+                </div>                      
+                </div>    
+                <div style={{display:'flex', flexDirection:'column', gap:'5px'}}>
+                    <span style={{fontSize:'18px', fontWeight:600}}>{entry.name}</span>
+                    <span style={{fontSize:'14px'}}>{entry.role} found at {entry.location}</span>
+                </div>
+                <div style={{display:'flex', flexWrap:'wrap',gap:'15px', width:'100%', justifyContent:'center',}}>
+                    <a href={`tel:${entry.phone}`} style={{textDecoration: 'none', minWidth:'250px', width:'25%', display:'flex' }}>
+                    <div style={{
+                        display:'flex',
+                        gap:'7px',
+                        alignItems:'center',
+                        background: 'linear-gradient(45deg, rgba(6, 116, 6, 0.77), rgba(2, 185, 2, 0.73))',
+                        padding:'10px',
+                        borderRadius:'25px',
+                        width:'45%',
+                        flex:'1 1 150px',
+                        justifyContent:'center',
+                        color:'white',
+                        cursor: 'pointer'
+                    }}>
+                        <PiPhoneCallThin style={{fontSize:'18px'}} />
+                        <span style={{fontSize:'14px', fontWeight:300}}>Call</span>
+                    </div>
+                    </a>
+
+                    <a href={`mailto:${entry.email}`} style={{textDecoration: 'none', minWidth:'250px', width:'25%', display:'flex' }}>
+                    <div style={{
+                        display:'flex',
+                        gap:'7px',
+                        alignItems:'center',
+                        background: 'linear-gradient(45deg, rgba(6, 116, 116, 0.77), rgba(144, 1, 180, 0.73))',
+                        padding:'10px',
+                        borderRadius:'25px',
+                        width:'45%',
+                        flex:'1 1 150px',
+                        justifyContent:'center',
+                        color:'white',
+                        cursor: 'pointer'
+                    }}>
+                        <CiMail style={{fontSize:'18px'}} />
+                        <span style={{fontSize:'14px', fontWeight:300}}>Mail</span>
+                    </div>
+                    </a>
+
+                </div>
+            </div>
+        )) :
+        <div></div>
+    }
+    </div>
+
+    )
 }
 
 const quickStats={
