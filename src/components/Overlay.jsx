@@ -4,7 +4,7 @@ import { AppContext } from '../pages/MainApp';
 
 export default function Overlay(){
     const {
-        setShowOverlay, setshowSidebar, setBuyCropsForm, setBuyResourceForm,setDeleteCard,setProfilePhoto,
+        setShowOverlay, setshowSidebar, setBuyCropsForm, setBuyResourceForm,setProfilePhoto,
         setSellCropsForm, setSellResourceForm,setResourceMoreDetails, showOverlay, setEditProfile, 
     } = useContext(AppContext);
 
@@ -27,7 +27,7 @@ export default function Overlay(){
         setSellCropsForm(false);
         setSellResourceForm(false);
         setResourceMoreDetails(false);
-        setDeleteCard(false);
+        //setDeleteCard(false);
         setEditProfile(false);
         setProfilePhoto(false);
     }

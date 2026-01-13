@@ -73,7 +73,7 @@ return (
                         <td style={tCell}>{Number(entry.ordered_crop_quantity)}</td>
                         <td style={tCell}>{Number(entry.paid_amount)+"Tsh"}</td>
                         <td style={tCell}>{entry.unit}</td>
-                        <td style={tCell}>{entry.fname+" "+entry.lname}</td>
+                        <td style={tCell}>{entry.user_fname+" "+entry.user_lname}</td>
                         <td style={tCell}>{entry.user_location}</td>
                         <td style={tCell}>{entry.purchase_receipt == "" ? "N/A" : entry.purchase_receipt}</td>
                         <td style={tCellActions}>
@@ -84,8 +84,8 @@ return (
                                     ordered_crop_quantity: entry.ordered_crop_quantity,
                                     paid_amount: entry.paid_amount,
                                     unit: entry.unit,
-                                    fname: entry.fname,
-                                    lname: entry.lname,
+                                    fname: entry.user_fname,
+                                    lname: entry.user_lname,
                                     user_location: entry.user_location,
                                     purchase_receipt: entry.purchase_receipt,
                                     status: entry.status,

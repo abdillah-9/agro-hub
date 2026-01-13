@@ -78,7 +78,7 @@ return (
                             }
                         </td>
                         <td style={tCell}>{entry.unit}</td>
-                        <td style={tCell}>{entry.fname+ " "+entry.lname}</td>
+                        <td style={tCell}>{entry.user_fname+ " "+entry.user_lname}</td>
                         <td style={tCell}>{entry.user_location}</td>
                         <td style={tCellActions}>
                             <div onClick={()=>{setShowOverlay(true); setResourceMoreDetails(true);
@@ -94,8 +94,8 @@ return (
                                     price_per_minimum_sellable_quantity: entry.price_per_minimum_sellable_quantity,
                                     minimum_sellable_quantity: entry.minimum_sellable_quantity,
                                     unit: entry.unit,
-                                    fname: entry.fname,
-                                    lname: entry.lname,
+                                    fname: entry.user_fname,
+                                    lname: entry.user_lname,
                                     description: entry.description,
                                     user_location: entry.user_location    
                                 });
@@ -117,8 +117,8 @@ return (
                                     price_per_minimum_sellable_quantity: entry.price_per_minimum_sellable_quantity,
                                     minimum_sellable_quantity: entry.minimum_sellable_quantity,
                                     unit: entry.unit,
-                                    fname: entry.fname,
-                                    lname: entry.lname,
+                                    fname: entry.user_fname,
+                                    lname: entry.user_lname,
                                     user_location: entry.user_location
                                 })}} 
                                 className='flex-Row centered gap4px'
