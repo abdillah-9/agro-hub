@@ -15,7 +15,7 @@ function MiniHome({setActiveLInk, activeLink}){
   return(
     <section style={contentDesc}>
       <div className='h1 pureWhiteText maxW500'>
-        Agro-hub enhance agriculture power
+        Agro-hub enhance agriculture powers
       </div>
       <div className='maxW500 midWhiteText' style={{fontSize:"23px", maxWidth:"700px"}}>
         It's your home where you can trade
