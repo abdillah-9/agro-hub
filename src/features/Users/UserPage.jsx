@@ -28,7 +28,7 @@ export default function UserPage({calcWidth}) {
         <div className='paleBlackBody wFull hFull centered blur' style={{padding:"30px 0px"}}>
           <div style={card}>
             <div style={upper}>
-              <img src={user_photo ? 'http://localhost:4000/uploads/'+user_photo : background} 
+              <img src={user_photo ? 'https://agrohub-backend.onrender.com/uploads/'+user_photo : background} 
               width={150} height={140} alt='user photo' style={image} 
               onClick={()=>{setProfilePhoto(true); setShowOverlay(true)}}/>
             </div>

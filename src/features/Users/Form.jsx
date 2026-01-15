@@ -68,7 +68,7 @@ export default function Form() {
     formDataBody.append('user_id',user_id);
     formDataBody.append('file_name', file_name);
     try{
-      const res = await fetch('http://localhost:4000/update_user_profile',{
+      const res = await fetch('https://agrohub-backend.onrender.com/update_user_profile',{
       body: formDataBody,
       method:"POST"
     });
@@ -99,7 +99,7 @@ export default function Form() {
     formDataBody.append('user_id', user_id);
 
     try{
-      const res = await fetch('http://localhost:4000/update_user_password',{
+      const res = await fetch('https://agrohub-backend.onrender.com/update_user_password',{
       body: formDataBody,
       method:"POST"
     });

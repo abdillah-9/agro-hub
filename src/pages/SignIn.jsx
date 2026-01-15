@@ -9,7 +9,7 @@ export default function SignIn({setActiveLInk, activeLink}) {
 
   async function getUserCookie(){
     try{
-      const getcookie = await fetch('http://localhost:4000/get_user_from_cookie',{
+      const getcookie = await fetch('https://agrohub-backend.onrender.com/get_user_from_cookie',{
         credentials:'include', method:"POST"
       });
 

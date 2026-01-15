@@ -57,7 +57,7 @@ export default function ProfilePhoto() {
     }    
 
     try{
-      const res = await fetch('http://localhost:4000/update_profile_photo', {
+      const res = await fetch('https://agrohub-backend.onrender.com/update_profile_photo', {
         method:"POST",
         body: photoFormData,
       });

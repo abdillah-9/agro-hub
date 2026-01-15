@@ -70,7 +70,7 @@ export default function SignUp({setActiveLInk, activeLink}) {
     console.log(e.target.user_photo.value);
 
     try{
-      const res = await fetch('http://localhost:4000/sign_up',{
+      const res = await fetch('https://agrohub-backend.onrender.com/sign_up',{
         body: formData,
         method: 'POST'
       });

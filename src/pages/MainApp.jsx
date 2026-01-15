@@ -18,7 +18,7 @@ export default function MainApp() {
 useEffect(() => {
   async function fetchCookie() {
     try {
-      const res = await fetch('http://localhost:4000/get_user_from_cookie', {
+      const res = await fetch('https://agrohub-backend.onrender.com/get_user_from_cookie', {
         method: "POST",
         credentials: 'include',
       });
