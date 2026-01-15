@@ -50,7 +50,7 @@ return (
                             entry?.resource_photo ? 
                             <div style={viewPhoto ? showPicSpace : {width:"100%",height:"100%"}} className='blur link'
                             onClick={()=>setViewPhoto(!viewPhoto)}>
-                                <img src={'http://localhost:4000/uploads/'+entry?.resource_photo} 
+                                <img src={'https://agrohub-backend.onrender.com/uploads/'+entry?.resource_photo} 
                                 width={"70px"} height={"50px"} 
                                 style={ viewPhoto ? showPic : {}}/>
                             </div> : 

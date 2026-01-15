@@ -53,7 +53,7 @@ export default function Form({crops_transactions, setRefresh}) {
       const formData = new FormData(form);
       formData.append('price_per_minimum_sellable_quantity',inputs?.price_per_minimum_sellable_quantity);
       
-      const res = await fetch('http://localhost:4000/make_crops_order',{
+      const res = await fetch('https://agrohub-backend.onrender.com/make_crops_order',{
         method:"POST",
         body:formData
       });

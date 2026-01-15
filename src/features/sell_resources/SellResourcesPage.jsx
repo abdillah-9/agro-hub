@@ -31,7 +31,7 @@ export default function SellResourcesPage({calcWidth}) {
     useEffect(()=>{
       async function fetchResources(){
         try{
-          const res = await fetch('http://localhost:4000/get_resources_sales', {
+          const res = await fetch('https://agrohub-backend.onrender.com/get_resources_sales', {
             method: "POST",
             body: formDataResources,
           });

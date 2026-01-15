@@ -98,7 +98,7 @@ export default function Form({formData, setFormData, setResource_data, setRefres
 
     // send data to backend using fetch() API
     try{
-      const res = await fetch("http://localhost:4000/upload_resources_for_sale",{
+      const res = await fetch("https://agrohub-backend.onrender.com/upload_resources_for_sale",{
         body: formDataBody,
         method: "POST",
       });

@@ -41,7 +41,7 @@ export default function DeleteCard({shownData,refresh,setRefresh, deleteCard, se
     formDataBody.append('shownData', shownData);
 
     try{
-      const res = await fetch("http://localhost:4000/remove_resource_selected_row",
+      const res = await fetch("https://agrohub-backend.onrender.com/remove_resource_selected_row",
         {
           body:formDataBody, 
           method: "POST"

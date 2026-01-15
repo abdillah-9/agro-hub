@@ -27,7 +27,7 @@ export default function BuyResourcesPage({calcWidth}) {
         formDataBody.append('status',shownData);
         formDataBody.append('user_id',user_id);
 
-        const res = await fetch('http://localhost:4000/get_resources_purchases',{
+        const res = await fetch('https://agrohub-backend.onrender.com/get_resources_purchases',{
           method:"POST",
           body:formDataBody
         });

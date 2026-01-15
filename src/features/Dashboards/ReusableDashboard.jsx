@@ -51,7 +51,7 @@ const COLORS = ['#2a7f62', '#f3bf4f', '#e76f51', '#264653'];
     useEffect(() => {
         const fData = new FormData();
         fData.append('user_id',userData.id);
-        fetch("http://localhost:4000/get_recent_interactions", {
+        fetch("https://agrohub-backend.onrender.com/get_recent_interactions", {
             method: "POST",
             credentials: "include",
             body: fData

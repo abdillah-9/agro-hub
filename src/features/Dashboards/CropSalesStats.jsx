@@ -15,7 +15,7 @@ export default function CropSalesStats(){
             formedData.append('user_id',userData.user_id);
             formedData.append('status', 'onsale');
         try{
-            const res = await fetch(' http://localhost:4000/get_dashboard_crops_sales',{
+            const res = await fetch('https://agrohub-backend.onrender.com/get_dashboard_crops_sales',{
                 method:'POST',
                 body: formedData
             });

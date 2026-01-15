@@ -19,7 +19,7 @@ export default function TopNavBar() {
   } 
   async function logout_user(){
     try{
-      const res = await fetch('http://localhost:4000/logout', {
+      const res = await fetch('https://agrohub-backend.onrender.com/logout', {
         method:"POST",
         credentials:'include',
       });
@@ -38,13 +38,13 @@ export default function TopNavBar() {
     }
   };
 
-  {console.log("http://localhost:4000/uploads/"+user_photo)}
+  {console.log("https://agrohub-backend.onrender.com/uploads/"+user_photo)}
 
   return (
     <div className='w100vw pureWhiteBody flex-Row-Grow-Wrap-Gap-Space_Between centeredH pH10px'>
       <div className='pureWhiteBody flex-Row-Wrap-Gap centeredH' style={{paddings:"15px 0px"}}>
         <img className='bRad50_parcent' width={60} height={50} style={{boxShadow:'1px 1px 10px black'}}
-          src={user_photo ? "http://localhost:4000/uploads/"+user_photo : userPhoto} />  
+          src={user_photo ? "https://agrohub-backend.onrender.com/uploads/"+user_photo : userPhoto} />  
         <span className='h5' style={{fontSize:'15px', textTransform:'capitalize'}}>
           <b className='midGreenText'>Hello,</b> {user_fname+" "+user_lname}
         </span>

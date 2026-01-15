@@ -16,7 +16,7 @@ export default function ResourcePurchasesStats() {
         const form = new FormData();
         form.append("user_id", userData.id);
 
-        fetch("http://localhost:4000/get_dashboard_resources_purchases", {
+        fetch("https://agrohub-backend.onrender.com/get_dashboard_resources_purchases", {
             method: "POST",
             body: form
         })

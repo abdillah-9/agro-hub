@@ -23,7 +23,7 @@ export default function SellCropsPage({calcWidth}) {
       formData.append('user_id', user_id);
       formData.append('status', shownData);
       try{
-        const res = await fetch('http://localhost:4000/get_crops_sales',{
+        const res = await fetch('https://agrohub-backend.onrender.com/get_crops_sales',{
           method:"POST",
           body: formData,
         });

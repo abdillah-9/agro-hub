@@ -37,7 +37,7 @@ return (
                     <td style={tCell}>
                         <div style={viewPhoto ? showPicSpace : {width:"100%",height:"100%"}} className='blur link'
                         onClick={()=>setViewPhoto(!viewPhoto)}>
-                            <img src={entry?.crop_photo ? 'http://localhost:4000/uploads/'+entry?.crop_photo :
+                            <img src={entry?.crop_photo ? 'https://agrohub-backend.onrender.com/uploads/'+entry?.crop_photo :
                                 demoPhoto} 
                                 width={"70px"} height={"50px"} alt={entry.photo_name} 
                             style={ viewPhoto? showPic : {}}/>
