@@ -3,6 +3,7 @@ import aboutPic1 from '../assets/countryside-workers-out-field.jpg';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { PiPlantFill } from 'react-icons/pi';
 import { FaTractor } from 'react-icons/fa';
+import Test from '../components/test';
 
 export default function About(){
 
@@ -98,7 +99,10 @@ export default function About(){
 }
 
 function Learning(){
+
   return(
-    <div>Learning</div>
+    <div>
+      <Test/>
+    </div>
   )
 }
