@@ -7,7 +7,7 @@ export default function Test(){
             width:'100%',
             display:'grid',
             gap:'20px',
-            gridTemplateColumns:'1fr 1fr 1fr' 
+            gridTemplateColumns:'1fr 1fr' 
             }}>
             <div style={{boxShadow:'1px 1px 20px black', borderRadius:'10px',padding:'20px'}}>
                 bonzo
