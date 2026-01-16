@@ -90,7 +90,15 @@ export default function About(){
           </div>
         </div>
       </section>
-      
+
+      {/** Learning some staffs */}
+      <Learning/>
     </div>
+  )
+}
+
+function Learning(){
+  return(
+    <div>Learning</div>
   )
 }

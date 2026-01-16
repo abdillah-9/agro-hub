@@ -69,15 +69,6 @@ export default function SideNavBar() {
             <MdSettingsSuggest className='h3'/>
             <span className="p3">Settings</span>
           </div>
-          
-          {/** THIS IS TEMPORARY SPACE FOR EXERCISES */}
-          <div className='flex-Column gap4px centered pV10px h100px borderB pureWhiteBorder link '
-          style={urlPath.includes("test") ? {color:"rgb(29, 29, 29)", background:activeBackground} : {}}
-          onClick={()=>{menuAction("test")}}>       
-            <MdSettingsSuggest className='h3'/>
-            <span className="p3">Test</span>
-          </div>
-
         </div>
     : 
     <div></div>
