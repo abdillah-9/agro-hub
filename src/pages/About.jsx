@@ -101,7 +101,7 @@ export default function About(){
 function Learning(){
 
   return(
-    <div>
+    <div style={{width:"100%"}}>
       <Test/>
     </div>
   )
