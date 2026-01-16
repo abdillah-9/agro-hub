@@ -27,7 +27,8 @@ export default function MiniMainApp() {
         urlPath.includes("buy_crops") ? <BuyCropsPage calcWidth={calcWidth}/> :
         urlPath.includes("sell_crops") ? <SellCropsPage calcWidth={calcWidth}/> :
         urlPath.includes("user") ? <UserPage calcWidth={calcWidth}/> :
-        urlPath.includes("settings") && <SettingsPage calcWidth={calcWidth}/>
+        urlPath.includes("settings") ? <SettingsPage calcWidth={calcWidth}/> :
+        urlPath.includes("test") && <SettingsPage calcWidth={calcWidth}/>
       }
     </div>
   )
