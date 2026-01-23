@@ -32,22 +32,7 @@ export default function ReusableDashboard() {
     const [like, setLike] = useState(true);
     //set navigation
     const navigateTo = useNavigate();  
-// Sample data for charts
-const cropSalesData = [
-  { month: 'June', sales: 4000 },
-  { month: 'July', sales: 7500 },
-  { month: 'Aug', sales: 6200 },
-  { month: 'Sept', sales: 9100 },
-];
 
-const cropDistributionData = [
-  { name: 'Maize', value: 45 },
-  { name: 'Wheat', value: 25 },
-  { name: 'Teff', value: 15 },
-  { name: 'Barley', value: 15 },
-];
-
-const COLORS = ['#2a7f62', '#f3bf4f', '#e76f51', '#264653'];
     useEffect(() => {
         const fData = new FormData();
         fData.append('user_id',userData.id);
@@ -57,12 +42,39 @@ const COLORS = ['#2a7f62', '#f3bf4f', '#e76f51', '#264653'];
             body: fData
         })
             .then(res => res.json())
-            .then(data => {
-                 console.log("recent interactions response:", data);
-            if (data.status === 200) {
-                setFavourateBuyers(data.interactions);
-            }
-        });
+.then(data => {
+  console.log("recent interactions response:", data);
+
+  if (data.status === 200) {
+    const normalized = data.interactions.map(i => {
+      const isBuyer = i.buyer_id === userData.id;
+
+      return {
+        id: i.order_id,
+
+        name: isBuyer
+          ? `${i.seller_fname} ${i.seller_lname}`
+          : `${i.buyer_fname} ${i.buyer_lname}`,
+
+        role: isBuyer ? 'Seller' : 'Buyer',
+
+        location: isBuyer
+          ? i.seller_location
+          : i.buyer_location,
+
+        phone: isBuyer
+          ? i.seller_phone_number
+          : i.buyer_phone_number,
+
+        // optional, safe for now
+        email: null
+      };
+    });
+
+    setFavourateBuyers(normalized);
+  }
+});
+
     }, [userData]);
 
   return (
